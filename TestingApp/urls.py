@@ -23,6 +23,7 @@ from api import views as api_views
 router = DefaultRouter()
 router.register('recipes',api_views.RecipeViewSet)
 router.register('users',api_views.UserViewSet, 'users')
+router.register('recipes/(?P<recipe_pk>[^/.]+)/tests', api_views.TestViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

@@ -6,20 +6,22 @@ All endpoints begin with `https://bake-it-till-you-make-it.herokuapp.com/api/`
 
 NOTE: API Root is /api/
 
-
-|  Method  |  Endpoint  |  Description |
-| -------- | ---------- | ------------ |
-|POST|[/auth/users/](#create-a-new-user)|Create a new user|
-|POST|[/auth/token/login/](#login-user)|Login user|
-|POST|[/auth/users/me/](#users-info)|User's info|
-|POST|[/auth/token/logout/](#logout-user)|Logout user|
-|GET|[/recipes/](#list-of-recipes)|List all created recipes|
-|POST|[/recipes/](#create-a-new-recipe-for-user)|Create a new recipe|
-|GET|[/recipes/{id}/](#details-for-a-specific-recipe)|Details for a specific recipe|
-|PUT|[/recipes/{id}/](#update-an-existing-recipe)|Update an existing recipe|
-|PATCH|[/recipes/{id}/](#update-part-of-an-existing-recipe)|Update part of an existing recipe|
-
-
+| Method | Endpoint                                                           | Description                         |
+| ------ | ------------------------------------------------------------------ | ----------------------------------- |
+| POST   | [/auth/users/](#create-a-new-user)                                 | Create a new user                   |
+| POST   | [/auth/token/login/](#login-user)                                  | Login user                          |
+| POST   | [/auth/users/me/](#users-info)                                     | User's info                         |
+| POST   | [/auth/token/logout/](#logout-user)                                | Logout user                         |
+| GET    | [/recipes/](#list-of-recipes)                                      | List all created recipes            |
+| POST   | [/recipes/](#create-a-new-recipe-for-user)                         | Create a new recipe                 |
+| GET    | [/recipes/{id}/](#details-for-a-specific-recipe)                   | Details for a specific recipe       |
+| PUT    | [/recipes/{id}/](#update-an-existing-recipe)                       | Update an existing recipe           |
+| PATCH  | [/recipes/{id}/](#update-part-of-an-existing-recipe)               | Update part of an existing recipe   |
+| POST   | [/recipes/{id}/tests/](#create-a-new-test-for-a-recipe)            | Create a test for a recipe          |
+| GET    | [/recipes/{id}/tests/](#list-of-tests-for-a-recipe)                | List of tests for a recipe          |
+| PUT    | [/recipes/{id}/tests/{id}/](#update-an-existing-test-for-a-recipe) | Update a specific test for a recipe |
+| PATCH  | [/recipes/{id}/tests/{id}/](#update-part-of-a-specific-test)       | Update part of an existing test     |
+| DELETE | [/recipes/{id}/tests/{id}/](#delete-a-specific-test-of-a-recipe)   | Update part of an existing test     |
 
 ## Create a new user
 
@@ -46,13 +48,12 @@ Response: If you receive the same info you provided, user creation was successfu
 201 Created
 
 {
-  "email": "", 
+  "email": "",
   "username": "Eric",
-  "id": 2, 
+  "id": 2,
 }
 
 ```
-
 
 ## Login user
 
@@ -77,10 +78,9 @@ POST auth/token/login/
 {
     "auth_token": "51cad4728f8f16eb7c953f240fd90d53d11bb1af"
 }
-``` 
+```
+
 NOTE: auth_token must be passed for all requests with the logged in user. It remains active till user is [logged out](#logout-user).
-
-
 
 ## User's info
 
@@ -99,11 +99,9 @@ GET /auth/users/me/
     "email": "",
     "id": 2,
     "username": "Eric",
-    
+
 }
 ```
-
-
 
 ## Logout user
 
@@ -120,8 +118,6 @@ POST /auth/token/logout/
 ```json
 204 No Content
 ```
-
-
 
 ## List of recipes
 
@@ -149,7 +145,6 @@ GET /recipes/
     "created_at": "2022-06-17T22:10:19.000066",
 }
 ```
-
 
 ## Create a new recipe for user
 
@@ -205,8 +200,6 @@ If anonymous / guest user attempts to POST:
 }
 ```
 
-
-
 ## Details for a specific recipe
 
 Requirement: user must be logged in.
@@ -214,7 +207,7 @@ Requirement: user must be logged in.
 ### Request
 
 ```json
-GET /recipes/id/ 
+GET /recipes/id/
 ```
 
 ### Response
@@ -234,15 +227,13 @@ Response for GET: id, title, ingredients, recipe, chef, created_at and answers (
 }
 ```
 
-
-
 ## Update an existing recipe
 
 Requirement: user must be logged in.
 
 ### Request
 
-Required fields: title, recipe & ingredients 
+Required fields: title, recipe & ingredients
 
 ```json
 PUT /recipes/id/
@@ -281,18 +272,16 @@ If missing a required field, ex. ingredients:
 }
 ```
 
-
-
 ## Update part of an existing recipe
 
 Requirement: user must be logged in.
 
 ### Request
 
-Required fields: title and/or ingredients and/or recipe 
+Required fields: title and/or ingredients and/or recipe
 
 ```json
-PATCH /recipes/id/ 
+PATCH /recipes/id/
 
 {
 	"ingredients": "1 Italian Roll, and any meat (or tofu if you want)!?!?",
@@ -311,5 +300,188 @@ PATCH /recipes/id/
 	"recipe": "Fry up the meat n pop it in the bread.. YUM!",
 	"chef": "Eric",
 	"created_at": "2022-06-17T22:20:39.720066"
+}
+```
+
+## Create a new test for a recipe
+
+### Request
+
+Requirement: user must be logged in.
+
+Required fields: version_number, igredients, recipe
+Note: feedback_link is a temporarily a required textfield until feedback component is developed and linked to this field. Please use example.com or other website in that field.
+
+```json
+POST /recipes/id/tests/
+
+{
+
+		"version_number": "1",
+		"ingredients": "1 Italian Roll, MEEEAT AND cheez nomz!!",
+		"recipe": "Fry up the meat n pop it in the bread.. YUM! Put cold cheese slice on top of bread BING BONG",
+		"feedback_link": "http://example.com",
+	}
+```
+
+### Response
+
+```json
+201 Created
+
+{
+		"id": 3,
+		"title": "Cheesteak",
+		"version_number": "1",
+		"ingredients": "1 Italian Roll, MEEEAT AND cheez nomz!!",
+		"recipe": "Fry up the meat n pop it in the bread.. YUM! Put cold cheese slice on top of bread BING BONG",
+		"image": null,
+		"outside_notes": null,
+		"final_notes": null,
+		"adjustments": null,
+		"feedback_link": "http://example.com",
+		"tags": null,
+		"chef": "Eric",
+		"variation_complete": false,
+		"created_at": "2022-06-18T18:00:38.408425",
+		"successful_variation": false
+	}
+
+```
+
+## List of tests for a recipe
+
+### Request
+
+```json
+GET /recipes/id/tests/
+```
+
+### Response
+
+```json
+200 OK
+
+{
+		"id": 3,
+		"title": "Cheesteak",
+		"version_number": "1",
+		"ingredients": "1 Italian Roll, MEEEAT AND cheez nomz!!",
+		"recipe": "Fry up the meat n pop it in the bread.. YUM! Put cold cheese slice on top of bread BING BONG",
+		"image": null,
+		"outside_notes": null,
+		"final_notes": null,
+		"adjustments": null,
+		"feedback_link": "http://example.com",
+		"tags": null,
+		"chef": "Eric",
+		"variation_complete": false,
+		"created_at": "2022-06-18T18:00:38.408425",
+		"successful_variation": false
+	}
+```
+
+## Update an existing test for a recipe
+
+Requirement: user must be logged in.
+
+### Request
+
+Required fields: version_number, ingredients, recipe, feedback_link
+
+```json
+PUT /recipes/id/tests/id
+
+{
+		"version_number": "1",
+		"ingredients": "1 Italian Roll, MEEEAT AND more cheez nomz!!",
+		"recipe": "Fry up the meat n pop it in the bread.. YUM! Put 2 cold cheese slices on top of bread BING BONG",
+		"feedback_link": "http://example.com",
+	}
+```
+
+### Response
+
+```json
+200 OK
+{
+		"id": 3,
+		"title": "Cheesteak",
+		"version_number": "1",
+		"ingredients": "1 Italian Roll, MEEEAT AND cheez nomz!!",
+		"recipe": "Fry up the meat n pop it in the bread.. YUM! Put 2 cold cheese slices on top of bread BING BONG",
+		"image": null,
+		"outside_notes": null,
+		"final_notes": null,
+		"adjustments": null,
+		"feedback_link": "http://example.com",
+		"tags": null,
+		"chef": "Eric",
+		"variation_complete": false,
+		"created_at": "2022-06-18T18:00:38.408425",
+		"successful_variation": false
+	}
+```
+
+## Update part of a specific test
+
+Requirement: user must be logged in.
+
+### Request
+
+Required fields: version_number and/or ingredients and/or recipe and/or feedback_link
+
+```json
+PATCH /recipes/id/tests/id
+
+{
+		"recipe": "Fry up the meat n pop it in the bread.. YUM! Put 4 cold cheese slices on top of bread BING BONG",
+	}
+```
+
+### Response
+
+```json
+200 OK
+{
+		"id": 3,
+		"title": "Cheesteak",
+		"version_number": "1",
+		"ingredients": "1 Italian Roll, MEEEAT AND more cheez nomz!!",
+		"recipe": "Fry up the meat n pop it in the bread.. YUM! Put 4 cold cheese slices on top of bread BING BONG",
+		"image": null,
+		"outside_notes": null,
+		"final_notes": null,
+		"adjustments": null,
+		"feedback_link": "http://example.com",
+		"tags": null,
+		"chef": "Eric",
+		"variation_complete": false,
+		"created_at": "2022-06-18T18:00:38.408425",
+		"successful_variation": false
+	}
+```
+
+## Delete a specific test of a recipe
+
+Requirement: user must be logged in.
+
+### Request
+
+```json
+DELETE /recipes/id/tests/id
+
+{
+
+}
+```
+
+### Response
+
+```json
+204 No Content
+
+{
+
 }
 ```
