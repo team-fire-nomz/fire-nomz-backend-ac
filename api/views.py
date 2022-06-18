@@ -1,9 +1,13 @@
 from django.shortcuts import render
 from django.db.models import Count
-from api.models import Recipe
+from api.models import User, Recipe
 from rest_framework.viewsets import ModelViewSet
-from api.serializers import RecipeSerializer
+from api.serializers import UserSerializer, RecipeSerializer
 
+
+class UserViewSet(ModelViewSet):
+    queryset            = User.objects.all()
+    serializer_class    = UserSerializer
 
 class RecipeViewSet(ModelViewSet):
     queryset          = Recipe.objects.all()
