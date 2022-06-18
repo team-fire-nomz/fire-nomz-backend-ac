@@ -24,9 +24,9 @@ class RecipeViewSet(ModelViewSet):
         return results
 
     def perform_destroy(self, instance):
-        if self.request.user  == instance.creator:
+        if self.request.user  == instance.chef:
             instance.delete()
 
     def perform_update(self,serializer):
-        if self.request.user == serializer.instance.creator:
+        if self.request.user == serializer.instance.chef:
             serializer.save()
