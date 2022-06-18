@@ -141,14 +141,12 @@ GET /recipes/
 200 OK
 
 {
-	{
-		"id": 1,
-		"title": "Title Test",
-        "ingredients": "Ingredients Test",
-        "recipe": "Recipe Test",
-		"chef": "Eric",
-        "created_at": "2022-06-17T22:10:19.000066",
-	},
+    "id": 1,
+    "title": "Title Test",
+    "ingredients": "Ingredients Test",
+    "recipe": "Recipe Test",
+    "chef": "Eric",
+    "created_at": "2022-06-17T22:10:19.000066",
 }
 ```
 
@@ -159,13 +157,14 @@ Requirement: user must be logged in.
 
 ### Request
 
-Required fields: title and recipe
+Required fields: title, ingredients and recipe
 
 ```json
 POST /recipes/
 
 {
-	"title": "Cheesteak",	
+	"title": "Cheesteak",
+    "ingredients": "1 Italian Roll, your choice of meat (as much as you want)",
 	"recipe": "Fry up the meat n pop it in the bread.. YUM!"
 }
 ```
@@ -181,6 +180,18 @@ POST /recipes/
 	"recipe": "Fry up the meat n pop it in the bread.. YUM!",
 	"chef": "Eric",
 	"created_at": "2022-06-17T22:20:39.720066"
+}
+```
+
+If missing a required field, ex. recipe:
+
+```json
+400 Bad Request
+
+{
+	"recipe": [
+		"This field is required."
+	]
 }
 ```
 
@@ -278,7 +289,7 @@ Requirement: user must be logged in.
 
 ### Request
 
-Required fields: title and/or description 
+Required fields: title and/or ingredients and/or recipe 
 
 ```json
 PATCH /recipes/id/ 
