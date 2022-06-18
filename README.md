@@ -14,6 +14,10 @@ NOTE: API Root is /api/
 |POST|[/auth/users/me/](#users-info)|User's info|
 |POST|[/auth/token/logout/](#logout-user)|Logout user|
 |GET|[/recipes/](#list-of-recipes)|List all created recipes|
+|POST|[/recipes/](#create-a-new-recipe-for-user)|Create a new recipe|
+|GET|[/recipes/{id}/](#details-for-a-specific-recipe)|Details for a specific recipe|
+|PUT|[/recipes/{id}/](#update-an-existing-recipe)|Update an existing recipe|
+|PATCH|[/recipes/{id}/](#update-part-of-an-existing-recipe)|Update part of an existing recipe|
 
 
 
@@ -77,6 +81,7 @@ POST auth/token/login/
 NOTE: auth_token must be passed for all requests with the logged in user. It remains active till user is [logged out](#logout-user).
 
 
+
 ## User's info
 
 Requirement: user must be logged in.
@@ -122,12 +127,12 @@ POST /auth/token/logout/
 
 Returns list of all recipes.
 
+User can be anonymous / guest or logged in.
+
 ### Request
 
-Requirement: user must be logged in.
-
 ```json
-GET /questions/
+GET /recipes/
 ```
 
 ### Response
@@ -139,8 +144,161 @@ GET /questions/
 	{
 		"id": 1,
 		"title": "Title Test",
-		"created_at": "",
-		"chef": "Eric"
+        "ingredients": "Ingredients Test",
+        "recipe": "Recipe Test",
+		"chef": "Eric",
+        "created_at": "2022-06-17T22:10:19.000066",
 	},
+}
+```
+
+
+## Create a new recipe for user
+
+Requirement: user must be logged in.
+
+### Request
+
+Required fields: title and recipe
+
+```json
+POST /recipes/
+
+{
+	"title": "Cheesteak",	
+	"recipe": "Fry up the meat n pop it in the bread.. YUM!"
+}
+```
+
+### Response
+
+```json
+201 Created
+
+{
+	"id": 2,
+	"title": "Cheesteak",
+	"recipe": "Fry up the meat n pop it in the bread.. YUM!",
+	"chef": "Eric",
+	"created_at": "2022-06-17T22:20:39.720066"
+}
+```
+
+If anonymous / guest user attempts to POST:
+
+```json
+401 Unauthorized
+
+{
+	"detail": "Authentication credentials were not provided."
+}
+```
+
+
+
+## Details for a specific recipe
+
+Requirement: user must be logged in.
+
+### Request
+
+```json
+GET /recipes/id/ 
+```
+
+### Response
+
+Response for GET: id, title, ingredients, recipe, chef, created_at and answers (if any). In the below example, there are no tests for this recipe. (to be added/tested later - ** UPDATE later **)
+
+```json
+200 OK
+
+{
+	"id": 2,
+	"title": "Cheesteak",
+	"ingredients": "1 Italian Roll, your choice of meat (as much as you want)",
+	"recipe": "Fry up the meat n pop it in the bread.. YUM!",
+	"chef": "Eric",
+	"created_at": "2022-06-17T22:20:39.720066"
+}
+```
+
+
+
+## Update an existing recipe
+
+Requirement: user must be logged in.
+
+### Request
+
+Required fields: title, recipe & ingredients 
+
+```json
+PUT /recipes/id/
+
+{
+    "title": "Cheesteak!!",
+    "ingredients": "1 Italian Roll, and MEAT nomz!!",
+    "recipe": "Fry up the meat n pop it in the roll."
+}
+```
+
+### Response
+
+```json
+200 OK
+
+{
+	"id": 2,
+	"title": "Cheesteak!!",
+    "ingredients": "1 Italian Roll, and MEAT nomz!!",
+    "recipe": "Fry up the meat n pop it in the roll.",
+	"chef": "Eric",
+	"created_at": "2022-06-17T22:20:39.720066"
+}
+```
+
+If missing a required field, ex. ingredients:
+
+```json
+400 Bad Request
+
+{
+	"ingredients": [
+		"This field is required."
+	]
+}
+```
+
+
+
+## Update part of an existing recipe
+
+Requirement: user must be logged in.
+
+### Request
+
+Required fields: title and/or description 
+
+```json
+PATCH /recipes/id/ 
+
+{
+	"ingredients": "1 Italian Roll, and any meat (or tofu if you want)!?!?",
+}
+```
+
+### Response
+
+```json
+200 OK
+
+{
+	"id": 2,
+	"title": "Cheesteak",
+	"ingredients": "1 Italian Roll, and any meat (or tofu if you want)!?!?",
+	"recipe": "Fry up the meat n pop it in the bread.. YUM!",
+	"chef": "Eric",
+	"created_at": "2022-06-17T22:20:39.720066"
 }
 ```

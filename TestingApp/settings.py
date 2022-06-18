@@ -162,6 +162,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 # Test for time modification - have to test lines 164-170
 
 DATETIME_FORMAT='%d%-m-%Y-%H:%M'
+#not working
 
 L10N=False 
 '''to make sore localization data doesn't take precedent when it comes to dates format.

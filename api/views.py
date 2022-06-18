@@ -19,9 +19,13 @@ class RecipeViewSet(ModelViewSet):
             results = Recipe.objects.filter(title__icontains=self.request.query_params.get("search"))
         else:
             results = Recipe.objects.annotate(
-                total_answers=Count('tests')
+                total_recipes=Count('recipe')
             )
-        return results
+        return results.order_by('-id')
+# need to check line 22 for the future
+
+    def perform_create(self, serializer):
+        serializer.save(chef=self.request.user)
 
     def perform_destroy(self, instance):
         if self.request.user  == instance.chef:
@@ -30,3 +34,8 @@ class RecipeViewSet(ModelViewSet):
     def perform_update(self,serializer):
         if self.request.user == serializer.instance.chef:
             serializer.save()
+
+    def get_serializer_class(self):
+        if self.action in ['retrieve']:
+            return RecipeSerializer
+        return super().get_serializer_class()
