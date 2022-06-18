@@ -17,6 +17,7 @@ django-cors-headers = "*"
 django-on-heroku = "*"
 gunicorn = "*"
 drf-nested-routers = "*"
+pillow = "*"
 
 [dev-packages]
 
