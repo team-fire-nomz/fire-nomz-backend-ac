@@ -45,3 +45,15 @@ class TestViewSet(ModelViewSet):
     queryset            = Test.objects.all().order_by('created_at')
     serializer_class    = TestSerializer
     #permission class for authenticated users?
+
+
+    def perform_create(self, serializer):
+        serializer.save(chef=self.request.user)
+
+    def perform_destroy(self, instance):
+        if self.request.user  == instance.chef:
+            instance.delete()
+
+    def perform_update(self,serializer):
+        if self.request.user == serializer.instance.chef:
+            serializer.save()
