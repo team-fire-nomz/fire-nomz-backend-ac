@@ -15,7 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-# from api.router import router
+from rest_framework_nested import routers
+from rest_framework.routers import DefaultRouter
+from rest_framework_nested.routers import NestedSimpleRouter
+from api import views as api_views
+
+router = DefaultRouter()
+router.register('recipes',api_views.RecipeViewSet)
+router.register('users',api_views.UserViewSet, 'users')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -23,5 +30,6 @@ urlpatterns = [
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.jwt')),
     path('auth/', include('djoser.urls.authtoken')),
-    # path('api/', include(router.urls)),
+    path('api/', include(router.urls)),
+    # path('api/recipes/<int:recipe_pk>/tests/<int:test_pk>/feedback/', api_views.AnswerListCreateView.as_view(),    name="recipe_feedback",),
 ]

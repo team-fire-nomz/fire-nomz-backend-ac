@@ -1,2 +1,2 @@
-web: gunicorn testingapp.wsgi
+web: gunicorn TestingApp.wsgi
 release: python manage.py migrate
