@@ -169,3 +169,9 @@ L10N=False
 '''
 
 USE_TZ=False
+
+SERIALIZERS = [
+    {
+                    'user': 'fire-nomz-back-end.TestingApp.serializers.UserCreateSerializer',
+}
+]

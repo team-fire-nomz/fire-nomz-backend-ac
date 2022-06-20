@@ -2,6 +2,10 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 class User(AbstractUser):
+    location = models.CharField(max_length=100, blank=True, null=True)
+    business_name = models.CharField(max_length=200, blank=True, null=True)
+    
+
 
     def __repr__(self):
         return f"<User username={self.username} pk={self.pk}>"

@@ -6,22 +6,22 @@ All endpoints begin with `https://bake-it-till-you-make-it.herokuapp.com/api/`
 
 NOTE: API Root is /api/
 
-| Method | Endpoint                                                           | Description                         |
-| ------ | ------------------------------------------------------------------ | ----------------------------------- |
-| POST   | [/auth/users/](#create-a-new-user)                                 | Create a new user                   |
-| POST   | [/auth/token/login/](#login-user)                                  | Login user                          |
-| POST   | [/auth/users/me/](#users-info)                                     | User's info                         |
-| POST   | [/auth/token/logout/](#logout-user)                                | Logout user                         |
-| GET    | [/recipes/](#list-of-recipes)                                      | List all created recipes            |
-| POST   | [/recipes/](#create-a-new-recipe-for-user)                         | Create a new recipe                 |
-| GET    | [/recipes/{id}/](#details-for-a-specific-recipe)                   | Details for a specific recipe       |
-| PUT    | [/recipes/{id}/](#update-an-existing-recipe)                       | Update an existing recipe           |
-| PATCH  | [/recipes/{id}/](#update-part-of-an-existing-recipe)               | Update part of an existing recipe   |
-| POST   | [/recipes/{id}/tests/](#create-a-new-test-for-a-recipe)            | Create a test for a recipe          |
-| GET    | [/recipes/{id}/tests/](#list-of-tests-for-a-recipe)                | List of tests for a recipe          |
-| PUT    | [/recipes/{id}/tests/{id}/](#update-an-existing-test-for-a-recipe) | Update a specific test for a recipe |
-| PATCH  | [/recipes/{id}/tests/{id}/](#update-part-of-a-specific-test)       | Update part of an existing test     |
-| DELETE | [/recipes/{id}/tests/{id}/](#delete-a-specific-test-of-a-recipe)   | Update part of an existing test     |
+| Method | Endpoint                                                           | Description                          |
+| ------ | ------------------------------------------------------------------ | ------------------------------------ |
+| POST   | [/users/](#create-a-new-user)                                      | Create a new user                    |
+| POST   | [/auth/token/login/](#login-user)                                  | Login user\*\* remove /api from url  |
+| POST   | [/users/me/](#users-info)                                          | User's info                          |
+| POST   | [/auth/token/logout/](#logout-user)                                | Logout user\*\* remove /api from url |
+| GET    | [/recipes/](#list-of-recipes)                                      | List all created recipes             |
+| POST   | [/recipes/](#create-a-new-recipe-for-user)                         | Create a new recipe                  |
+| GET    | [/recipes/{id}/](#details-for-a-specific-recipe)                   | Details for a specific recipe        |
+| PUT    | [/recipes/{id}/](#update-an-existing-recipe)                       | Update an existing recipe            |
+| PATCH  | [/recipes/{id}/](#update-part-of-an-existing-recipe)               | Update part of an existing recipe    |
+| POST   | [/recipes/{id}/tests/](#create-a-new-test-for-a-recipe)            | Create a test for a recipe           |
+| GET    | [/recipes/{id}/tests/](#list-of-tests-for-a-recipe)                | List of tests for a recipe           |
+| PUT    | [/recipes/{id}/tests/{id}/](#update-an-existing-test-for-a-recipe) | Update a specific test for a recipe  |
+| PATCH  | [/recipes/{id}/tests/{id}/](#update-part-of-a-specific-test)       | Update an existing test              |
+| DELETE | [/recipes/{id}/tests/{id}/](#delete-a-specific-test-of-a-recipe)   | Update part of an existing test      |
 
 ## Create a new user
 
@@ -32,7 +32,7 @@ Required fields: username and password
 Optional fields: email
 
 ```json
-POST auth/users/
+POST /users/
 
 {
   "username": "Eric",
@@ -87,7 +87,7 @@ NOTE: auth_token must be passed for all requests with the logged in user. It rem
 Requirement: user must be logged in.
 
 ```json
-GET /auth/users/me/
+GET /users/me/
 ```
 
 ### Response
@@ -387,12 +387,13 @@ Requirement: user must be logged in.
 
 ### Request
 
-Required fields: version_number, ingredients, recipe, feedback_link
+Required fields: title, version_number, ingredients, recipe, feedback_link
 
 ```json
 PUT /recipes/id/tests/id
 
 {
+		"title": "Cheesteak"
 		"version_number": "1",
 		"ingredients": "1 Italian Roll, MEEEAT AND more cheez nomz!!",
 		"recipe": "Fry up the meat n pop it in the bread.. YUM! Put 2 cold cheese slices on top of bread BING BONG",
@@ -429,7 +430,7 @@ Requirement: user must be logged in.
 
 ### Request
 
-Required fields: version_number and/or ingredients and/or recipe and/or feedback_link
+Required fields: title and/or version_number and/or ingredients and/or recipe and/or feedback_link
 
 ```json
 PATCH /recipes/id/tests/id
