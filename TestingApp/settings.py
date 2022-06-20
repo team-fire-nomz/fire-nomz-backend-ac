@@ -155,14 +155,14 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ],
+    'DATETIME_FORMAT': '%m/%d/%Y %H:%M',
 }
 
 CORS_ALLOW_ALL_ORIGINS = True
 
 # Test for time modification - have to test lines 164-170
 
-DATETIME_FORMAT='%d%-m-%Y-%H:%M'
-#not working
+DATETIME_FORMAT='%m/%d/%Y %H:%M'
 
 L10N=False 
 '''to make sore localization data doesn't take precedent when it comes to dates format.
