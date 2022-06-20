@@ -1,15 +1,38 @@
 from dataclasses import fields
-from turtle import title
 from rest_framework import serializers
+from djoser.serializers import UserSerializer as DjoserUserSerializer
+from djoser.serializers import UserCreateSerializer as DjoserUserCreateSerializer
 from .models import Test, User, Recipe
 
-class UserSerializer(serializers.ModelSerializer):
+
+class UserSerializer(DjoserUserSerializer):
     class Meta:
         model = User
         fields = (
             'id',
             'username',
             'email',
+            'first_name',
+            'last_name',
+            'date_joined',
+            'location',
+            'business_name',
+        )
+
+
+class UserCreateSerializer(DjoserUserCreateSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'username',
+            'email',
+            'first_name',
+            'password',
+            'last_name',
+            'date_joined',
+            'location',
+            'business_name',
         )
 
 class RecipeSerializer(serializers.ModelSerializer):
@@ -25,6 +48,7 @@ class RecipeSerializer(serializers.ModelSerializer):
             'chef',
             'created_at',
             ]
+
 
 class TestSerializer(serializers.ModelSerializer):
     #might change to Name once User model is discussed futher

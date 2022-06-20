@@ -1,13 +1,23 @@
 from django.shortcuts import render
+from djoser.views import UserViewSet as DjoserUserViewSet
 from django.db.models import Count
 from api.models import User, Recipe, Test
 from rest_framework.viewsets import ModelViewSet
-from api.serializers import TestSerializer, UserSerializer, RecipeSerializer
+from api.serializers import TestSerializer, RecipeSerializer, UserCreateSerializer, UserSerializer
 
 
-class UserViewSet(ModelViewSet):
+class UserViewSet(DjoserUserViewSet):
     queryset            = User.objects.all()
     serializer_class    = UserSerializer
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            serializer_class = UserCreateSerializer
+        else:
+            serializer_class = UserSerializer
+        return serializer_class
+
+
 
 class RecipeViewSet(ModelViewSet):
     queryset          = Recipe.objects.all()
