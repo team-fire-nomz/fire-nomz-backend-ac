@@ -10,7 +10,7 @@ NOTE: API Root is /api/
 | ------ | ------------------------------------------------------------------ | ------------------------------------ |
 | POST   | [/users/](#create-a-new-user)                                      | Create a new user                    |
 | POST   | [/auth/token/login/](#login-user)                                  | Login user\*\* remove /api from url  |
-| POST   | [/users/me/](#users-info)                                          | User's info                          |
+| GET    | [/users/me/](#users-info)                                          | User's info                          |
 | POST   | [/auth/token/logout/](#logout-user)                                | Logout user\*\* remove /api from url |
 | GET    | [/recipes/](#list-of-recipes)                                      | List all created recipes             |
 | POST   | [/recipes/](#create-a-new-recipe-for-user)                         | Create a new recipe                  |
@@ -21,7 +21,7 @@ NOTE: API Root is /api/
 | GET    | [/recipes/{id}/tests/](#list-of-tests-for-a-recipe)                | List of tests for a recipe           |
 | PUT    | [/recipes/{id}/tests/{id}/](#update-an-existing-test-for-a-recipe) | Update a specific test for a recipe  |
 | PATCH  | [/recipes/{id}/tests/{id}/](#update-part-of-a-specific-test)       | Update an existing test              |
-| DELETE | [/recipes/{id}/tests/{id}/](#delete-a-specific-test-of-a-recipe)   | Update part of an existing test      |
+| DELETE | [/recipes/{id}/tests/{id}/](#delete-a-specific-test-of-a-recipe)   | Delete part of an existing test      |
 
 ## Create a new user
 
@@ -159,7 +159,7 @@ POST /recipes/
 
 {
 	"title": "Cheesteak",
-    "ingredients": "1 Italian Roll, your choice of meat (as much as you want)",
+	"ingredients": "1 Italian Roll, your choice of meat (as much as you want)",
 	"recipe": "Fry up the meat n pop it in the bread.. YUM!"
 }
 ```
@@ -316,12 +316,11 @@ Note: feedback_link is a temporarily a required textfield until feedback compone
 POST /recipes/id/tests/
 
 {
-
-		"version_number": "1",
-		"ingredients": "1 Italian Roll, MEEEAT AND cheez nomz!!",
-		"recipe": "Fry up the meat n pop it in the bread.. YUM! Put cold cheese slice on top of bread BING BONG",
-		"feedback_link": "http://example.com",
-	}
+	"version_number": "1",
+	"ingredients": "1 Italian Roll, MEEEAT AND cheez nomz!!",
+	"recipe": "Fry up the meat n pop it in the bread.. YUM! Put cold cheese slice on top of bread BING BONG",
+	"feedback_link": "http://example.com"
+}
 ```
 
 ### Response
@@ -330,22 +329,22 @@ POST /recipes/id/tests/
 201 Created
 
 {
-		"id": 3,
-		"title": "Cheesteak",
-		"version_number": "1",
-		"ingredients": "1 Italian Roll, MEEEAT AND cheez nomz!!",
-		"recipe": "Fry up the meat n pop it in the bread.. YUM! Put cold cheese slice on top of bread BING BONG",
-		"image": null,
-		"outside_notes": null,
-		"final_notes": null,
-		"adjustments": null,
-		"feedback_link": "http://example.com",
-		"tags": null,
-		"chef": "Eric",
-		"variation_complete": false,
-		"created_at": "2022-06-18T18:00:38.408425",
-		"successful_variation": false
-	}
+	"id": 3,
+	"title": "Cheesteak",
+	"version_number": "1",
+	"ingredients": "1 Italian Roll, MEEEAT AND cheez nomz!!",
+	"recipe": "Fry up the meat n pop it in the bread.. YUM! Put cold cheese slice on top of bread BING BONG",
+	"image": null,
+	"outside_notes": null,
+	"final_notes": null,
+	"adjustments": null,
+	"feedback_link": "http://example.com",
+	"tags": null,
+	"chef": "Eric",
+	"variation_complete": false,
+	"created_at": "2022-06-18T18:00:38.408425",
+	"successful_variation": false
+}
 
 ```
 
@@ -363,22 +362,22 @@ GET /recipes/id/tests/
 200 OK
 
 {
-		"id": 3,
-		"title": "Cheesteak",
-		"version_number": "1",
-		"ingredients": "1 Italian Roll, MEEEAT AND cheez nomz!!",
-		"recipe": "Fry up the meat n pop it in the bread.. YUM! Put cold cheese slice on top of bread BING BONG",
-		"image": null,
-		"outside_notes": null,
-		"final_notes": null,
-		"adjustments": null,
-		"feedback_link": "http://example.com",
-		"tags": null,
-		"chef": "Eric",
-		"variation_complete": false,
-		"created_at": "2022-06-18T18:00:38.408425",
-		"successful_variation": false
-	}
+	"id": 3,
+	"title": "Cheesteak",
+	"version_number": "1",
+	"ingredients": "1 Italian Roll, MEEEAT AND cheez nomz!!",
+	"recipe": "Fry up the meat n pop it in the bread.. YUM! Put cold cheese slice on top of bread BING BONG",
+	"image": null,
+	"outside_notes": null,
+	"final_notes": null,
+	"adjustments": null,
+	"feedback_link": "http://example.com",
+	"tags": null,
+	"chef": "Eric",
+	"variation_complete": false,
+	"created_at": "2022-06-18T18:00:38.408425",
+	"successful_variation": false
+}
 ```
 
 ## Update an existing test for a recipe
@@ -393,12 +392,12 @@ Required fields: title, version_number, ingredients, recipe, feedback_link
 PUT /recipes/id/tests/id
 
 {
-		"title": "Cheesteak"
-		"version_number": "1",
-		"ingredients": "1 Italian Roll, MEEEAT AND more cheez nomz!!",
-		"recipe": "Fry up the meat n pop it in the bread.. YUM! Put 2 cold cheese slices on top of bread BING BONG",
-		"feedback_link": "http://example.com",
-	}
+	"title": "Cheesteak"
+	"version_number": "1",
+	"ingredients": "1 Italian Roll, MEEEAT AND more cheez nomz!!",
+	"recipe": "Fry up the meat n pop it in the bread.. YUM! Put 2 cold cheese slices on top of bread BING BONG",
+	"feedback_link": "http://example.com"
+}
 ```
 
 ### Response
@@ -406,22 +405,22 @@ PUT /recipes/id/tests/id
 ```json
 200 OK
 {
-		"id": 3,
-		"title": "Cheesteak",
-		"version_number": "1",
-		"ingredients": "1 Italian Roll, MEEEAT AND cheez nomz!!",
-		"recipe": "Fry up the meat n pop it in the bread.. YUM! Put 2 cold cheese slices on top of bread BING BONG",
-		"image": null,
-		"outside_notes": null,
-		"final_notes": null,
-		"adjustments": null,
-		"feedback_link": "http://example.com",
-		"tags": null,
-		"chef": "Eric",
-		"variation_complete": false,
-		"created_at": "2022-06-18T18:00:38.408425",
-		"successful_variation": false
-	}
+	"id": 3,
+	"title": "Cheesteak",
+	"version_number": "1",
+	"ingredients": "1 Italian Roll, MEEEAT AND cheez nomz!!",
+	"recipe": "Fry up the meat n pop it in the bread.. YUM! Put 2 cold cheese slices on top of bread BING BONG",
+	"image": null,
+	"outside_notes": null,
+	"final_notes": null,
+	"adjustments": null,
+	"feedback_link": "http://example.com",
+	"tags": null,
+	"chef": "Eric",
+	"variation_complete": false,
+	"created_at": "2022-06-18T18:00:38.408425",
+	"successful_variation": false
+}
 ```
 
 ## Update part of a specific test
@@ -436,8 +435,8 @@ Required fields: title and/or version_number and/or ingredients and/or recipe an
 PATCH /recipes/id/tests/id
 
 {
-		"recipe": "Fry up the meat n pop it in the bread.. YUM! Put 4 cold cheese slices on top of bread BING BONG",
-	}
+	"recipe": "Fry up the meat n pop it in the bread.. YUM! Put 4 cold cheese slices on top of bread BING BONG",
+}
 ```
 
 ### Response
@@ -445,22 +444,22 @@ PATCH /recipes/id/tests/id
 ```json
 200 OK
 {
-		"id": 3,
-		"title": "Cheesteak",
-		"version_number": "1",
-		"ingredients": "1 Italian Roll, MEEEAT AND more cheez nomz!!",
-		"recipe": "Fry up the meat n pop it in the bread.. YUM! Put 4 cold cheese slices on top of bread BING BONG",
-		"image": null,
-		"outside_notes": null,
-		"final_notes": null,
-		"adjustments": null,
-		"feedback_link": "http://example.com",
-		"tags": null,
-		"chef": "Eric",
-		"variation_complete": false,
-		"created_at": "2022-06-18T18:00:38.408425",
-		"successful_variation": false
-	}
+	"id": 3,
+	"title": "Cheesteak",
+	"version_number": "1",
+	"ingredients": "1 Italian Roll, MEEEAT AND more cheez nomz!!",
+	"recipe": "Fry up the meat n pop it in the bread.. YUM! Put 4 cold cheese slices on top of bread BING BONG",
+	"image": null,
+	"outside_notes": null,
+	"final_notes": null,
+	"adjustments": null,
+	"feedback_link": "http://example.com",
+	"tags": null,
+	"chef": "Eric",
+	"variation_complete": false,
+	"created_at": "2022-06-18T18:00:38.408425",
+	"successful_variation": false
+}
 ```
 
 ## Delete a specific test of a recipe
