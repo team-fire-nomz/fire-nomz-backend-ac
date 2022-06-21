@@ -14,13 +14,21 @@ class User(AbstractUser):
         return self.username
 
 
-class Recipe(models.Model):
+class RecipeVersion(models.Model):
     title = models.CharField(max_length=255)
-    recipe = models.TextField()
+    version_number = models.CharField(max_length=3)
     ingredients = models.TextField()
-    chef = models.ForeignKey('User', on_delete=models.CASCADE, related_name='chef', max_length=255) 
-    recipe_complete = models.BooleanField(default=False)
+    recipe_steps = models.TextField()
+    image = models.ImageField(blank=True, null=True)
+    ready_for_feedback = models.BooleanField(default=False)
+    successful_variation = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    chef = models.ForeignKey('User', on_delete=models.CASCADE, related_name='chefs', max_length=255) 
+    recipe_note_tag = models.ForeignKey('Tag', on_delete=models.CASCADE, related_name='tags', max_length=255)
+    recipe_note = models.ForeignKey('Note', on_delete=models.CASCADE, related_name='recipe_notes', max_length=255)
+    
+    feedback_link = models.CharField(max_length=255, blank=True, null=True)
+    # 2.0 - FK to TasterFeedback
 
     def __str__(self):
         return f"{self.title} by {self.chef}"
@@ -36,7 +44,7 @@ class Test(models.Model):
     outside_notes = models.CharField(max_length=400, blank=True, null=True)
     final_notes = models.CharField(max_length=400, blank=True, null=True)
     adjustments = models.CharField(max_length=455, blank=True, null=True)
-    feedback_link = models.URLField(max_length=255, )
+    feedback_link = models.URLField(max_length=255,)
 #temporarily set to CharField, researching how to connect with tags component from react FE repo
     tags = models.CharField(max_length=255, blank=True, null=True)
     chef = models.ForeignKey('User', on_delete=models.CASCADE, related_name='test', max_length = 255)
@@ -94,3 +102,11 @@ class TasterFeedback(models.Model):
 
     def __str__(self):
         return f"Feedback for {self.test_recipe}"
+
+class Note(models.Model):
+    note = models.TextField()
+    recipe_version = models.ForeignKey('RecipeVersion', on_delete=models.CASCADE, related_name='recipe_versions', max_length=255)
+    note_tag = models.ForeignKey('Tag', on_delete=models.CASCADE, related_name='note_tags', max_length=255)
+
+class Tag(models.Model):
+    tag = models.CharField(max_length=255)
