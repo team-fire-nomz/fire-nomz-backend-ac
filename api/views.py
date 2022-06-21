@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from djoser.views import UserViewSet as DjoserUserViewSet
 from django.db.models import Count
+from rest_framework.generics import get_object_or_404
 from api.models import User, Recipe, Test
 from rest_framework.viewsets import ModelViewSet
 from api.serializers import TestSerializer, RecipeSerializer, UserCreateSerializer, UserSerializer
@@ -56,13 +57,12 @@ class TestViewSet(ModelViewSet):
     serializer_class    = TestSerializer
     #permission class for authenticated users?
 
+    def get_queryset(self):
+        return Test.objects.filter(base_recipe_id=self.kwargs["recipe_pk"])
 
-    def perform_create(self, serializer):
-        serializer.save(chef=self.request.user)
-
-    def perform_destroy(self, instance):
-        if self.request.user  == instance.chef:
-            instance.delete()
+    def perform_create(self, serializer, **kwargs):
+        base_recipe = get_object_or_404(Recipe, pk=self.kwargs["recipe_pk"])
+        serializer.save(chef=self.request.user, base_recipe=base_recipe)
 
     def perform_update(self,serializer):
         if self.request.user == serializer.instance.chef:
