@@ -75,6 +75,7 @@ class TestSerializer(serializers.ModelSerializer):
         ]
 
 class TasterFeedbackSerializer(serializers.ModelSerializer):
+    tester = serializers.SlugRelatedField(read_only=True, slug_field="username")
     # test_version_number = serializers.SlugRelatedField(read_only=True, slug_field="test_version_number")
     # rating = serializers.MultipleChoiceField(choices = TasterFeedback.RADIO)
     # saltiness = serializers.MultipleChoiceField(choices = TasterFeedback.SCALE)
@@ -87,14 +88,15 @@ class TasterFeedbackSerializer(serializers.ModelSerializer):
         model = TasterFeedback
         fields = [
             'id',
-            # 'test_version_number',
+            'created_at',
+            'test_version_number',
+            'tester',
             'rating',
             'saltiness',
             'sweetness',
             'portion',
             'texture',
             'additional_comment',
-            'created_at',
         ]
 
 
