@@ -46,3 +46,50 @@ class Test(models.Model):
 
     def __str__(self):
         return f"{self.base_recipe}: Test #{self.version_number} "
+
+
+class TasterFeedback(models.Model):
+    ONE = '1' 
+    TWO = '2'
+    THREE = '3'
+    FOUR = '4'
+    FIVE = '5'
+
+    RADIO = [ 
+        (ONE , '1'), 
+        (TWO , '2'), 
+        (THREE , '3'), 
+        (FOUR , '4'), 
+        (FIVE , '5'), 
+        ]
+
+    TOO_LITTLE = 'Too Little'
+    JUST_RIGHT = 'Just Right'
+    TOO_MUCH = 'Too Much'
+
+    SCALE = [ 
+        (TOO_LITTLE , 'Too Little'), 
+        (JUST_RIGHT , 'Just Right'),
+        (TOO_MUCH , 'Too Much'), 
+        ]
+    
+    YES = 'Yes'
+    NO = 'No'
+
+    CHOICE = [ 
+        (YES , 'Yes'), 
+        (NO , 'No'), 
+        ]
+    
+    rating = models.CharField(max_length=6, choices=RADIO, default=THREE,)
+    saltiness = models.CharField(max_length= 11, choices=SCALE, default=JUST_RIGHT,)
+    sweetness = models.CharField(max_length= 11, choices=SCALE, default=JUST_RIGHT,)
+    portion = models.CharField(max_length= 11, choices=SCALE, default=JUST_RIGHT,)
+    texture = models.CharField(max_length= 5, choices=CHOICE, default=YES,)
+    additional_comment = models.CharField(max_length=200,blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    version_number = models.ForeignKey('Test', on_delete=models.CASCADE, related_name='taster_feedback', max_length = 3)
+    tester = models.ForeignKey('User', on_delete=models.CASCADE, related_name='taster_feedback', max_length=50)
+
+    def __str__(self):
+        return f"Feedback for {self.version_number}"

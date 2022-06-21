@@ -25,6 +25,9 @@ router.register('recipes',api_views.RecipeViewSet)
 router.register('users',api_views.UserViewSet, 'users')
 router.register('recipes/(?P<recipe_pk>[^/.]+)/tests', api_views.TestViewSet)
 
+router.register('recipes/(?P<recipe_pk>[^/.]+)/tests/(?P<test_pk>[^/.]+)/feedback', api_views.TasterFeedbackView)
+router.register('recipes/(?P<recipe_pk>[^/.]+)/tests/(?P<test_pk>[^/.]+)/feedback/(?P<feedback_pk>[^/.]+)', api_views.TasterFeedbackDetailView)
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
