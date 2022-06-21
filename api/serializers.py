@@ -73,3 +73,50 @@ class TestSerializer(serializers.ModelSerializer):
             'created_at',
             'successful_variation',
         ]
+
+class TasterFeedbackSerializer(serializers.ModelSerializer):
+    rating = serializers.MultipleChoiceField(choices = TasterFeedback.RADIO)
+    saltiness = serializers.MultipleChoiceField(choices = TasterFeedback.SCALE)
+    sweetness = serializers.MultipleChoiceField(choices = TasterFeedback.SCALE)
+    portion = serializers.MultipleChoiceField(choices = TasterFeedback.SCALE)
+    texture = serializers.MultipleChoiceField(choices = TasterFeedback.CHOICE)
+
+
+    class Meta:
+        model = TasterFeedback
+        fields = [
+            'id',
+            'rating',
+            'saltiness',
+            'sweetness',
+            'portion',
+            'texture',
+            'additional_comment',
+            'created_at',
+        ]
+
+
+class TasterFeedbackDetailSerializer(serializers.ModelSerializer):
+    tester = serializers.SlugRelatedField(read_only=True, slug_field="username")
+
+    rating = serializers.MultipleChoiceField(choices = TasterFeedback.RADIO)
+    saltiness = serializers.MultipleChoiceField(choices = TasterFeedback.SCALE)
+    sweetness = serializers.MultipleChoiceField(choices = TasterFeedback.SCALE)
+    portion = serializers.MultipleChoiceField(choices = TasterFeedback.SCALE)
+    texture = serializers.MultipleChoiceField(choices = TasterFeedback.CHOICE)
+
+
+    class Meta:
+        model = TasterFeedback, Test
+        fields = [
+            'id',
+            'title',
+            'version_number',
+            'rating',
+            'saltiness',
+            'sweetness',
+            'portion',
+            'texture',
+            'additional_comment',
+            'created_at',
+        ]
