@@ -79,7 +79,10 @@ class TasterFeedbackView(ModelViewSet):
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def perform_create(self, serializer):
-        serializer.save(tester=self.request.user)
+        test_version_number = get_object_or_404(Test, pk=self.kwargs["test_pk"])
+        test_recipe = get_object_or_404(Test, pk=self.kwargs["test_pk"])
+        if self.request.user.is_authenticated:
+            serializer.save(tester=self.request.user, test_version_number=test_version_number, test_recipe=test_recipe)
 
     def perform_destroy(self, instance):
         if self.request.user  == instance.tester:
