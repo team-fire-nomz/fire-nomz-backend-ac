@@ -88,8 +88,9 @@ class TasterFeedback(models.Model):
     texture = models.CharField(max_length= 5, choices=CHOICE, default=YES,)
     additional_comment = models.CharField(max_length=200,blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    version_number = models.ForeignKey('Test', on_delete=models.CASCADE, related_name='taster_feedback', max_length = 3)
-    tester = models.ForeignKey('User', on_delete=models.CASCADE, related_name='taster_feedback', max_length=50)
+    test_recipe = models.ForeignKey('Test', on_delete=models.CASCADE, related_name='test_recipe', max_length = 255)
+    test_version_number = models.ForeignKey('Test', on_delete=models.CASCADE, related_name='test_version_number', max_length = 3)
+    tester = models.ForeignKey('User', on_delete=models.CASCADE, related_name='taster', max_length=50)
 
     def __str__(self):
-        return f"Feedback for {self.version_number}"
+        return f"Feedback for {self.test_recipe}"

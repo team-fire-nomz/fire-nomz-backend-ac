@@ -4,5 +4,4 @@ from .models import User, Test, Recipe, TasterFeedback
 admin.site.register(User)
 admin.site.register(Test)
 admin.site.register(Recipe)
-admin.set.register(TasterFeedback)
-
+admin.site.register(TasterFeedback)

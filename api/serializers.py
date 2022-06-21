@@ -107,11 +107,11 @@ class TasterFeedbackDetailSerializer(serializers.ModelSerializer):
 
 
     class Meta:
-        model = TasterFeedback, Test
+        model = TasterFeedback
         fields = [
             'id',
-            'title',
-            'version_number',
+            'test_recipe',
+            'test_version_number',
             'rating',
             'saltiness',
             'sweetness',
