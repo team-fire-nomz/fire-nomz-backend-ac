@@ -2,7 +2,7 @@ from dataclasses import fields
 from rest_framework import serializers
 from djoser.serializers import UserSerializer as DjoserUserSerializer
 from djoser.serializers import UserCreateSerializer as DjoserUserCreateSerializer
-from .models import Test, User, Recipe
+from .models import Test, User, Recipe, TasterFeedback
 
 
 class UserSerializer(DjoserUserSerializer):

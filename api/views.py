@@ -1,15 +1,17 @@
 from django.shortcuts import render
 from djoser.views import UserViewSet as DjoserUserViewSet
 from django.db.models import Count
-from rest_framework.generics import get_object_or_404
-from api.models import User, Recipe, Test
+from api.models import User, Recipe, Test, TasterFeedback
 from rest_framework.viewsets import ModelViewSet
-from api.serializers import TestSerializer, RecipeSerializer, UserCreateSerializer, UserSerializer
+from rest_framework.generics import UpdateAPIView, RetrieveUpdateDestroyAPIView
+from api.serializers import TestSerializer, RecipeSerializer, UserCreateSerializer, UserSerializer, TasterFeedbackSerializer, TasterFeedbackDetailSerializer
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 
 class UserViewSet(DjoserUserViewSet):
     queryset            = User.objects.all()
     serializer_class    = UserSerializer
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
@@ -19,10 +21,10 @@ class UserViewSet(DjoserUserViewSet):
         return serializer_class
 
 
-
 class RecipeViewSet(ModelViewSet):
     queryset          = Recipe.objects.all()
     serializer_class  = RecipeSerializer
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def get_queryset(self):
         search_term = self.request.query_params.get("search")
@@ -56,14 +58,59 @@ class TestViewSet(ModelViewSet):
     queryset            = Test.objects.all().order_by('created_at')
     serializer_class    = TestSerializer
     #permission class for authenticated users?
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
-    def get_queryset(self):
-        return Test.objects.filter(base_recipe_id=self.kwargs["recipe_pk"])
 
-    def perform_create(self, serializer, **kwargs):
-        base_recipe = get_object_or_404(Recipe, pk=self.kwargs["recipe_pk"])
-        serializer.save(chef=self.request.user, base_recipe=base_recipe)
+    def perform_create(self, serializer):
+        serializer.save(chef=self.request.user)
+
+    def perform_destroy(self, instance):
+        if self.request.user  == instance.chef:
+            instance.delete()
 
     def perform_update(self,serializer):
         if self.request.user == serializer.instance.chef:
+            serializer.save()
+
+
+class TasterFeedbackView(ModelViewSet):
+    queryset = TasterFeedback.objects.all()
+    serializer_class = TasterFeedbackSerializer
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+
+    def perform_create(self, serializer):
+        serializer.save(tester=self.request.user)
+
+    def perform_destroy(self, instance):
+        if self.request.user  == instance.tester:
+            instance.delete()
+
+    def perform_update(self,serializer):
+        if self.request.user == serializer.instance.tester:
+            serializer.save()
+
+
+class TasterFeedbackDetailView(ModelViewSet):
+    queryset = TasterFeedback.objects.all()
+    serializer_class = TasterFeedbackDetailSerializer
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+
+    def get_queryset(self): 
+        assert self.queryset is not None, (
+            "'%s' should either include a `queryset` attribute, "
+            "or override the `get_queryset()` method."
+            % self.__class__.__name__
+        )
+
+        queryset = self.queryset
+        if isinstance(queryset, QuerySet):
+            queryset = queryset.all()
+        return queryset
+
+    def perform_destroy(self, instance):
+        if self.request.user  == instance.tester:
+            instance.delete()
+
+    def perform_update(self,serializer):
+        if self.request.user == serializer.instance.tester:
             serializer.save()
