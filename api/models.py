@@ -38,6 +38,7 @@ class RecipeVersion(models.Model):
 class Note(models.Model):
     note = models.TextField(blank=True, null=True)
     recipe_version = models.ForeignKey('RecipeVersion', on_delete=models.CASCADE, related_name='recipe_versions', max_length=255)
+    note_by = models.ForeignKey('User', on_delete=models.CASCADE, related_name='notes_by')
 
 
 class Tag(models.Model):

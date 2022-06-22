@@ -64,13 +64,11 @@ class NoteViewSet(ModelViewSet):
         return Note.objects.filter(recipe_version_id=self.kwargs["recipe_pk"])
 
     def perform_create(self, serializer):
-        title_recipe = get_object_or_404(RecipeVersion, pk=self.kwargs["recipe_pk"])
-        breakpoint()
         if self.request.user.is_authenticated:
-            serializer.save(chef=self.request.user, title_recipe=title_recipe)
+            serializer.save(note_by=self.request.user)
 
     def perform_update(self,serializer):
-        if self.request.user == serializer.instance.chef:
+        if self.request.user == serializer.instance.note_by:
             serializer.save()
 
 
