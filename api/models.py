@@ -34,6 +34,16 @@ class RecipeVersion(models.Model):
         return f"{self.title} by {self.chef}"
 
 
+class Note(models.Model):
+    note = models.TextField()
+    recipe_version = models.ForeignKey('RecipeVersion', on_delete=models.CASCADE, related_name='recipe_versions', max_length=255)
+    note_tag = models.ForeignKey('Tag', on_delete=models.CASCADE, related_name='note_tags', max_length=255)
+
+
+class Tag(models.Model):
+    tag = models.CharField(max_length=255)
+
+
 class TasterFeedback(models.Model):
     ONE = '1' 
     TWO = '2'
@@ -80,11 +90,3 @@ class TasterFeedback(models.Model):
 
     def __str__(self):
         return f"Feedback for {self.test_recipe}"
-
-class Note(models.Model):
-    note = models.TextField()
-    recipe_version = models.ForeignKey('RecipeVersion', on_delete=models.CASCADE, related_name='recipe_versions', max_length=255)
-    note_tag = models.ForeignKey('Tag', on_delete=models.CASCADE, related_name='note_tags', max_length=255)
-
-class Tag(models.Model):
-    tag = models.CharField(max_length=255)

@@ -97,17 +97,19 @@ class TasterFeedbackDetailView(ModelViewSet):
     serializer_class = TasterFeedbackDetailSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
-    def get_queryset(self): 
-        assert self.queryset is not None, (
-            "'%s' should either include a `queryset` attribute, "
-            "or override the `get_queryset()` method."
-            % self.__class__.__name__
-        )
+    def get_queryset(self):
+        pass
+        # assert self.queryset is not None, (
+        #     "'%s' should either include a `queryset` attribute, "
+        #     "or override the `get_queryset()` method."
+        #     % self.__class__.__name__
+        # )
 
-        queryset = self.queryset
-        if isinstance(queryset, QuerySet):
-            queryset = queryset.all()
-        return queryset
+        # queryset = self.queryset
+        # if isinstance(queryset, QuerySet):
+        #     # Ensure queryset is re-evaluated on each request.
+        #     queryset = queryset.all()
+        # return queryset
 
     def perform_destroy(self, instance):
         if self.request.user  == instance.tester:
