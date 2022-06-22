@@ -50,8 +50,8 @@ class RecipeVersionSerializer(serializers.ModelSerializer):
             'ready_for_feedback',
             'successful_variation',
             'chef',
-            'recipe_note_tag',
-            'recipe_note',
+            # 'recipe_note_tag',
+            # 'recipe_note',
             'created_at',
             ]
 
@@ -85,9 +85,9 @@ class NoteSerializer(serializers.ModelSerializer):
         model = Note
         fields = [
             'id',
-            'notes',
+            'note',
             'recipe_version',
-            'note_tag',
+            # 'note_tag',
         ]
 
 class TasterFeedbackSerializer(serializers.ModelSerializer):

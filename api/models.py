@@ -24,8 +24,8 @@ class RecipeVersion(models.Model):
     successful_variation = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     chef = models.ForeignKey('User', on_delete=models.CASCADE, related_name='chefs', max_length=255) 
-    recipe_note_tag = models.ForeignKey('Tag', on_delete=models.CASCADE, related_name='tags', max_length=255)
-    recipe_note = models.ForeignKey('Note', on_delete=models.CASCADE, related_name='recipe_notes', max_length=255)
+    # recipe_note_tag = models.ForeignKey('Tag', on_delete=models.CASCADE, related_name='tags', max_length=255)
+    # recipe_note = models.ForeignKey('Note', on_delete=models.CASCADE, related_name='recipe_notes', max_length=255)
     
     #feedback_link = models.CharField(max_length=255, blank=True, null=True)
     # 2.0 - FK to TasterFeedback
@@ -35,13 +35,14 @@ class RecipeVersion(models.Model):
 
 
 class Note(models.Model):
-    note = models.TextField()
+    note = models.TextField(blank=True, null=True)
     recipe_version = models.ForeignKey('RecipeVersion', on_delete=models.CASCADE, related_name='recipe_versions', max_length=255)
-    note_tag = models.ForeignKey('Tag', on_delete=models.CASCADE, related_name='note_tags', max_length=255)
 
 
 class Tag(models.Model):
-    tag = models.CharField(max_length=255)
+    tag = models.CharField(max_length=255, blank=True, null=True)
+    recipe_version_tag = models.ForeignKey('RecipeVersion', on_delete=models.CASCADE, related_name='recipe_version_tags', max_length=255, blank=True, null=True)
+    note_tag = models.ForeignKey('Note', on_delete=models.CASCADE, related_name='note_tags', max_length=255, blank=True, null=True)
 
 
 class TasterFeedback(models.Model):

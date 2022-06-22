@@ -61,11 +61,12 @@ class NoteViewSet(ModelViewSet):
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def get_queryset(self):
-        return Note.objects.filter(title_id=self.kwargs["recipe_pk"])
+        return Note.objects.filter(recipe_version_id=self.kwargs["recipe_pk"])
 
-    def perform_create(self, serializer, **kwargs):
-        title_recipe = get_object_or_404(Note, pk=self.kwargs["recipe_pk"])
-        serializer.save(chef=self.request.user, title_recipe=title_recipe)
+    def perform_create(self, serializer):
+        title_recipe = get_object_or_404(RecipeVersion, pk=self.kwargs["recipe_pk"])
+        if self.request.user.is_authenticated:
+            serializer.save(chef=self.request.user, title_recipe=title_recipe)
 
     def perform_update(self,serializer):
         if self.request.user == serializer.instance.chef:
