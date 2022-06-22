@@ -24,6 +24,7 @@ class RecipeVersion(models.Model):
     successful_variation = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     chef = models.ForeignKey('User', on_delete=models.CASCADE, related_name='chefs', max_length=255) 
+    base_recipe = models.ForeignKey('self', on_delete=models.CASCADE),
     # recipe_note_tag = models.ForeignKey('Tag', on_delete=models.CASCADE, related_name='tags', max_length=255)
     # recipe_note = models.ForeignKey('Note', on_delete=models.CASCADE, related_name='recipe_notes', max_length=255)
     
