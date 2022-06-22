@@ -2,10 +2,10 @@ from django.shortcuts import render
 from djoser.views import UserViewSet as DjoserUserViewSet
 from django.db.models import Count
 from rest_framework.generics import get_object_or_404
-from api.models import User, Recipe, Test, TasterFeedback
+from api.models import User, RecipeVersion, Note, TasterFeedback
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import UpdateAPIView, RetrieveUpdateDestroyAPIView
-from api.serializers import TestSerializer, RecipeSerializer, UserCreateSerializer, UserSerializer, TasterFeedbackSerializer, TasterFeedbackDetailSerializer
+from api.serializers import NoteSerializer, RecipeVersionSerializer, UserCreateSerializer, UserSerializer, TasterFeedbackSerializer, TasterFeedbackDetailSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 
@@ -22,18 +22,18 @@ class UserViewSet(DjoserUserViewSet):
         return serializer_class
 
 
-class RecipeViewSet(ModelViewSet):
-    queryset          = Recipe.objects.all()
-    serializer_class  = RecipeSerializer
+class RecipeVersionViewSet(ModelViewSet):
+    queryset          = RecipeVersion.objects.all()
+    serializer_class  = RecipeVersionSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def get_queryset(self):
         search_term = self.request.query_params.get("search")
         if search_term is not None:
-            results = Recipe.objects.filter(title__icontains=self.request.query_params.get("search"))
+            results = RecipeVersion.objects.filter(title__icontains=self.request.query_params.get("search"))
         else:
-            results = Recipe.objects.annotate(
-                total_recipes=Count('recipe')
+            results = RecipeVersion.objects.annotate(
+                total_recipes=Count('recipe_steps')
             )
         return results.order_by('-id')
 # need to check line 22 for the future
@@ -51,22 +51,21 @@ class RecipeViewSet(ModelViewSet):
 
     def get_serializer_class(self):
         if self.action in ['retrieve']:
-            return RecipeSerializer
+            return RecipeVersionSerializer
         return super().get_serializer_class()
 
 
-class TestViewSet(ModelViewSet):
-    queryset            = Test.objects.all().order_by('created_at')
-    serializer_class    = TestSerializer
-    #permission class for authenticated users?
+class NoteViewSet(ModelViewSet):
+    queryset = Note.objects.all()
+    serializer_class = NoteSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def get_queryset(self):
-        return Test.objects.filter(base_recipe_id=self.kwargs["recipe_pk"])
+        return Note.objects.filter(title_id=self.kwargs["recipe_pk"])
 
     def perform_create(self, serializer, **kwargs):
-        base_recipe = get_object_or_404(Recipe, pk=self.kwargs["recipe_pk"])
-        serializer.save(chef=self.request.user, base_recipe=base_recipe)
+        title_recipe = get_object_or_404(Note, pk=self.kwargs["recipe_pk"])
+        serializer.save(chef=self.request.user, title_recipe=title_recipe)
 
     def perform_update(self,serializer):
         if self.request.user == serializer.instance.chef:
@@ -79,8 +78,8 @@ class TasterFeedbackView(ModelViewSet):
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def perform_create(self, serializer):
-        test_version_number = get_object_or_404(Test, pk=self.kwargs["test_pk"])
-        test_recipe = get_object_or_404(Test, pk=self.kwargs["test_pk"])
+        test_version_number = get_object_or_404(RecipeVersion, pk=self.kwargs["recipe_pk"])
+        test_recipe = get_object_or_404(RecipeVersion, pk=self.kwargs["recipe_pk"])
         if self.request.user.is_authenticated:
             serializer.save(tester=self.request.user, test_version_number=test_version_number, test_recipe=test_recipe)
 

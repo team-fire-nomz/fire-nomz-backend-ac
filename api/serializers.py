@@ -2,7 +2,7 @@ from dataclasses import fields
 from rest_framework import serializers
 from djoser.serializers import UserSerializer as DjoserUserSerializer
 from djoser.serializers import UserCreateSerializer as DjoserUserCreateSerializer
-from .models import Test, User, Recipe, TasterFeedback
+from .models import RecipeVersion, Note, User, TasterFeedback
 
 
 class UserSerializer(DjoserUserSerializer):
@@ -35,43 +35,59 @@ class UserCreateSerializer(DjoserUserCreateSerializer):
             'business_name',
         )
 
-class RecipeSerializer(serializers.ModelSerializer):
+class RecipeVersionSerializer(serializers.ModelSerializer):
     chef        = serializers.SlugRelatedField(read_only=True, slug_field="username")
 
     class Meta:
-        model  = Recipe
-        fields = [
-            'id',
-            'title',
-            'ingredients',
-            'recipe',
-            'chef',
-            'created_at',
-            ]
-
-
-class TestSerializer(serializers.ModelSerializer):
-    #might change to Name once User model is discussed futher
-    chef        = serializers.SlugRelatedField(read_only=True, slug_field="username")
-    title       = serializers.SlugRelatedField(read_only=True, slug_field="title")
-    class Meta:
-        model  = Test
+        model  = RecipeVersion
         fields = [
             'id',
             'title',
             'version_number',
             'ingredients',
-            'recipe',
+            'recipe_steps',
             'image',
-            'outside_notes',
-            'final_notes',
-            'adjustments',
-            'feedback_link',
-            'tags',
-            'chef',
-            'variation_complete',
-            'created_at',
+            'ready_for_feedback',
             'successful_variation',
+            'chef',
+            'recipe_note_tag',
+            'recipe_note',
+            'created_at',
+            ]
+
+
+# class TestSerializer(serializers.ModelSerializer):
+#     #might change to Name once User model is discussed futher
+#     chef        = serializers.SlugRelatedField(read_only=True, slug_field="username")
+#     title       = serializers.SlugRelatedField(read_only=True, slug_field="title")
+#     class Meta:
+#         model  = Test
+#         fields = [
+#             'id',
+#             'title',
+#             'version_number',
+#             'ingredients',
+#             'recipe',
+#             'image',
+#             'outside_notes',
+#             'final_notes',
+#             'adjustments',
+#             'feedback_link',
+#             'tags',
+#             'chef',
+#             'variation_complete',
+#             'created_at',
+#             'successful_variation',
+#         ]
+
+class NoteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Note
+        fields = [
+            'id',
+            'notes',
+            'recipe_version',
+            'note_tag',
         ]
 
 class TasterFeedbackSerializer(serializers.ModelSerializer):

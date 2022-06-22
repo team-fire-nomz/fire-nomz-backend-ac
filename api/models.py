@@ -27,33 +27,11 @@ class RecipeVersion(models.Model):
     recipe_note_tag = models.ForeignKey('Tag', on_delete=models.CASCADE, related_name='tags', max_length=255)
     recipe_note = models.ForeignKey('Note', on_delete=models.CASCADE, related_name='recipe_notes', max_length=255)
     
-    feedback_link = models.CharField(max_length=255, blank=True, null=True)
+    #feedback_link = models.CharField(max_length=255, blank=True, null=True)
     # 2.0 - FK to TasterFeedback
 
     def __str__(self):
         return f"{self.title} by {self.chef}"
-
-
-class Test(models.Model):
-    base_recipe = models.ForeignKey('Recipe', on_delete=models.CASCADE, related_name='tests', max_length = 255)
-#temporarily set to charfield in order to research how to sequential number entries
-    version_number = models.CharField(max_length=3)
-    ingredients = models.TextField(max_length=500)
-    recipe = models.TextField(max_length=800)  
-    image = models.ImageField(blank=True, null=True)
-    outside_notes = models.CharField(max_length=400, blank=True, null=True)
-    final_notes = models.CharField(max_length=400, blank=True, null=True)
-    adjustments = models.CharField(max_length=455, blank=True, null=True)
-    feedback_link = models.URLField(max_length=255,)
-#temporarily set to CharField, researching how to connect with tags component from react FE repo
-    tags = models.CharField(max_length=255, blank=True, null=True)
-    chef = models.ForeignKey('User', on_delete=models.CASCADE, related_name='test', max_length = 255)
-    variation_complete = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    successful_variation = models.BooleanField(default=False)
-
-    def __str__(self):
-        return f"{self.base_recipe}: Test #{self.version_number} "
 
 
 class TasterFeedback(models.Model):
@@ -96,8 +74,8 @@ class TasterFeedback(models.Model):
     texture = models.CharField(max_length= 5, choices=CHOICE, default=YES,)
     additional_comment = models.CharField(max_length=200,blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    test_recipe = models.ForeignKey('Test', on_delete=models.CASCADE, related_name='test_recipe', max_length = 255)
-    test_version_number = models.ForeignKey('Test', on_delete=models.CASCADE, related_name='test_version_number', max_length = 3)
+    test_recipe = models.ForeignKey('RecipeVersion', on_delete=models.CASCADE, related_name='test_recipe', max_length = 255)
+    test_version_number = models.ForeignKey('RecipeVersion', on_delete=models.CASCADE, related_name='test_version_number', max_length = 3)
     tester = models.ForeignKey('User', on_delete=models.CASCADE, related_name='taster', max_length=50)
 
     def __str__(self):
