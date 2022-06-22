@@ -23,28 +23,27 @@ class RecipeVersion(models.Model):
     ready_for_feedback = models.BooleanField(default=False)
     successful_variation = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    chef = models.ForeignKey('User', on_delete=models.CASCADE, related_name='chefs', max_length=255) 
+    chef = models.ForeignKey('User', on_delete=models.CASCADE, related_name='recipe_versions', max_length=255) 
     base_recipe = models.ForeignKey('self', on_delete=models.CASCADE),
-    # recipe_note_tag = models.ForeignKey('Tag', on_delete=models.CASCADE, related_name='tags', max_length=255)
-    # recipe_note = models.ForeignKey('Note', on_delete=models.CASCADE, related_name='recipe_notes', max_length=255)
     
-    #feedback_link = models.CharField(max_length=255, blank=True, null=True)
-    # 2.0 - FK to TasterFeedback
-
     def __str__(self):
         return f"{self.title} by {self.chef}"
 
 
 class Note(models.Model):
     note = models.TextField(blank=True, null=True)
-    recipe_version = models.ForeignKey('RecipeVersion', on_delete=models.CASCADE, related_name='recipe_versions', max_length=255)
-    note_by = models.ForeignKey('User', on_delete=models.CASCADE, related_name='notes_by')
+    recipe_version = models.ForeignKey('RecipeVersion', on_delete=models.CASCADE, related_name='notes', max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    note_by = models.ForeignKey('User', on_delete=models.CASCADE, related_name='notes')
+
+    def __str__(self):
+        return f"{self.recipe_version} by {self.note_by}"
 
 
 class Tag(models.Model):
     tag = models.CharField(max_length=255, blank=True, null=True)
-    recipe_version_tag = models.ForeignKey('RecipeVersion', on_delete=models.CASCADE, related_name='recipe_version_tags', max_length=255, blank=True, null=True)
-    note_tag = models.ForeignKey('Note', on_delete=models.CASCADE, related_name='note_tags', max_length=255, blank=True, null=True)
+    recipe_version_tag = models.ForeignKey('RecipeVersion', on_delete=models.CASCADE, related_name='tags', max_length=255, blank=True, null=True)
+    note_tag = models.ForeignKey('Note', on_delete=models.CASCADE, related_name='tags', max_length=255, blank=True, null=True)
 
 
 class TasterFeedback(models.Model):
@@ -87,9 +86,10 @@ class TasterFeedback(models.Model):
     texture = models.CharField(max_length= 5, choices=CHOICE, default=YES,)
     additional_comment = models.CharField(max_length=200,blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    test_recipe = models.ForeignKey('RecipeVersion', on_delete=models.CASCADE, related_name='test_recipe', max_length = 255)
-    test_version_number = models.ForeignKey('RecipeVersion', on_delete=models.CASCADE, related_name='test_version_number', max_length = 3)
+    test_recipe = models.ForeignKey('RecipeVersion', on_delete=models.CASCADE, related_name='taster_feedbacks', max_length = 255)
     tester = models.ForeignKey('User', on_delete=models.CASCADE, related_name='taster', max_length=50)
+    #feedback_link = models.CharField(max_length=255, blank=True, null=True)
+    # 2.0 - FK to TasterFeedback
 
     def __str__(self):
         return f"Feedback for {self.test_recipe}"

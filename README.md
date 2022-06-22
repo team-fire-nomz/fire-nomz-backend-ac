@@ -17,11 +17,12 @@ NOTE: API Root is /api/
 | GET    | [/recipes/{id}/](#details-for-a-specific-recipe)                   | Details for a specific recipe        |
 | PUT    | [/recipes/{id}/](#update-an-existing-recipe)                       | Update an existing recipe            |
 | PATCH  | [/recipes/{id}/](#update-part-of-an-existing-recipe)               | Update part of an existing recipe    |
-| POST   | [/recipes/{id}/tests/](#create-a-new-test-for-a-recipe)            | Create a test for a recipe           |
-| GET    | [/recipes/{id}/tests/](#list-of-tests-for-a-recipe)                | List of tests for a recipe           |
-| PUT    | [/recipes/{id}/tests/{id}/](#update-an-existing-test-for-a-recipe) | Update a specific test for a recipe  |
-| PATCH  | [/recipes/{id}/tests/{id}/](#update-part-of-a-specific-test)       | Update an existing test              |
-| DELETE | [/recipes/{id}/tests/{id}/](#delete-a-specific-test-of-a-recipe)   | Delete part of an existing test      |
+| POST   | [/recipes/{id}/tests/](#create-a-new-note-for-a-recipe)            | Create a note for a recipe           |
+| GET    | [/recipes/{id}/tests/](#list-of-tests-for-a-recipe)                | List of notes for a recipe           |
+| PUT    | [/recipes/{id}/tests/{id}/](#update-an-existing-test-for-a-recipe) | Update a specific note for a recipe  |
+| PATCH  | [/recipes/{id}/tests/{id}/](#update-part-of-a-specific-test)       | Update an existing note              |
+| DELETE | [/recipes/{id}/tests/{id}/](#delete-a-specific-test-of-a-recipe)   | Delete part of an existing note      |
+
 
 ## Create a new user
 
@@ -29,7 +30,7 @@ NOTE: API Root is /api/
 
 Required fields: username and password
 
-Optional fields: email
+Optional fields: email, first_name, last_name, date_joined, location and business name
 
 ```json
 POST /users/
@@ -48,12 +49,18 @@ Response: If you receive the same info you provided, user creation was successfu
 201 Created
 
 {
-  "email": "",
-  "username": "Eric",
-  "id": 2,
+"id": 2,
+"username": "Eric",
+"email": "",
+"first_name": "",
+"last_name": "",
+"date_joined": "06/22/2022 15:29",
+"location": null,
+"business_name": null
 }
 
 ```
+
 
 ## Login user
 
@@ -82,6 +89,7 @@ POST auth/token/login/
 
 NOTE: auth_token must be passed for all requests with the logged in user. It remains active till user is [logged out](#logout-user).
 
+
 ## User's info
 
 Requirement: user must be logged in.
@@ -96,12 +104,17 @@ GET /users/me/
 200 OK
 
 {
-    "email": "",
-    "id": 2,
-    "username": "Eric",
-
+	"id": 2,
+	"username": "Eric",
+	"email": "",
+	"first_name": "",
+	"last_name": "",
+	"date_joined": "06/22/2022 10:31",
+	"location": null,
+	"business_name": null
 }
 ```
+
 
 ## Logout user
 
@@ -118,6 +131,7 @@ POST /auth/token/logout/
 ```json
 204 No Content
 ```
+
 
 ## List of recipes
 
@@ -152,15 +166,16 @@ Requirement: user must be logged in.
 
 ### Request
 
-Required fields: title, ingredients and recipe
+Required fields: title, version_number, ingredients and recipe_steps
 
 ```json
 POST /recipes/
 
 {
 	"title": "Cheesteak",
+	"version_number": "1",
 	"ingredients": "1 Italian Roll, your choice of meat (as much as you want)",
-	"recipe": "Fry up the meat n pop it in the bread.. YUM!"
+	"recipe_steps": "Fry up the meat n pop it in the bread.. YUM!"
 }
 ```
 
@@ -172,19 +187,24 @@ POST /recipes/
 {
 	"id": 2,
 	"title": "Cheesteak",
-	"recipe": "Fry up the meat n pop it in the bread.. YUM!",
+	"version_number": "1",
+	"ingredients": "1 Italian Roll, your choice of meat (as much as you want)",
+	"recipe_steps": "Fry up the meat n pop it in the bread.. YUM!",
+	"image": null,
+	"ready_for_feedback": false,
+	"successful_variation": false,
 	"chef": "Eric",
-	"created_at": "2022-06-17T22:20:39.720066"
+	"created_at": "06/22/2022 15:45"
 }
 ```
 
-If missing a required field, ex. recipe:
+If missing a required field, ex. recipe_steps:
 
 ```json
 400 Bad Request
 
 {
-	"recipe": [
+	"recipe_steps": [
 		"This field is required."
 	]
 }
@@ -200,9 +220,10 @@ If anonymous / guest user attempts to POST:
 }
 ```
 
+
 ## Details for a specific recipe
 
-Requirement: user must be logged in.
+User can be anonymous / guest or logged in.
 
 ### Request
 
@@ -212,20 +233,26 @@ GET /recipes/id/
 
 ### Response
 
-Response for GET: id, title, ingredients, recipe, chef, created_at and answers (if any). In the below example, there are no tests for this recipe. (to be added/tested later - ** UPDATE later **)
+Response for GET: id, title, version_number, ingredients, recipe_steps, image, ready_for_feedback, successful_variation, chef, and created_at
+answers (if any). In the below example, there are no tests for this recipe. (to be added/tested later - ** UPDATE later **)
 
 ```json
 200 OK
 
 {
 	"id": 2,
-	"title": "Cheesteak",
+	"title": "Cheesteak!",
+	"version_number": "1",
 	"ingredients": "1 Italian Roll, your choice of meat (as much as you want)",
-	"recipe": "Fry up the meat n pop it in the bread.. YUM!",
+	"recipe_steps": "Fry up the meat n pop it in the bread.. YUM!",
+	"image": null,
+	"ready_for_feedback": false,
+	"successful_variation": false,
 	"chef": "Eric",
-	"created_at": "2022-06-17T22:20:39.720066"
+	"created_at": "06/22/2022 15:43"
 }
 ```
+
 
 ## Update an existing recipe
 
@@ -233,13 +260,14 @@ Requirement: user must be logged in.
 
 ### Request
 
-Required fields: title, recipe & ingredients
+Required fields: title, version_number, ingredients, and recipe_steps 
 
 ```json
 PUT /recipes/id/
 
 {
     "title": "Cheesteak!!",
+	"version_number": "2",
     "ingredients": "1 Italian Roll, and MEAT nomz!!",
     "recipe": "Fry up the meat n pop it in the roll."
 }
@@ -253,10 +281,11 @@ PUT /recipes/id/
 {
 	"id": 2,
 	"title": "Cheesteak!!",
+	"version_number": "2",
     "ingredients": "1 Italian Roll, and MEAT nomz!!",
     "recipe": "Fry up the meat n pop it in the roll.",
 	"chef": "Eric",
-	"created_at": "2022-06-17T22:20:39.720066"
+	"created_at": "06/22/2022 15:45"
 }
 ```
 
@@ -272,13 +301,14 @@ If missing a required field, ex. ingredients:
 }
 ```
 
+
 ## Update part of an existing recipe
 
 Requirement: user must be logged in.
 
 ### Request
 
-Required fields: title and/or ingredients and/or recipe
+Required fields: title and/or version_number and/or ingredients and/or recipe_steps
 
 ```json
 PATCH /recipes/id/
@@ -296,30 +326,29 @@ PATCH /recipes/id/
 {
 	"id": 2,
 	"title": "Cheesteak",
+	"version_number": "2",
 	"ingredients": "1 Italian Roll, and any meat (or tofu if you want)!?!?",
 	"recipe": "Fry up the meat n pop it in the bread.. YUM!",
 	"chef": "Eric",
-	"created_at": "2022-06-17T22:20:39.720066"
+	"created_at": "6/22/2022 15:50"
 }
 ```
 
-## Create a new test for a recipe
+## Create a new note for a recipe
 
 ### Request
 
 Requirement: user must be logged in.
 
-Required fields: version_number, igredients, recipe
-Note: feedback_link is a temporarily a required textfield until feedback component is developed and linked to this field. Please use example.com or other website in that field.
+Required fields: recipe_version
+Optional fields: note 
 
 ```json
-POST /recipes/id/tests/
+POST /recipes/id/notes/
 
 {
-	"version_number": "1",
-	"ingredients": "1 Italian Roll, MEEEAT AND cheez nomz!!",
-	"recipe": "Fry up the meat n pop it in the bread.. YUM! Put cold cheese slice on top of bread BING BONG",
-	"feedback_link": "http://example.com"
+	"recipe_version": 2,
+	"note": "Chezsteak so nomz!"
 }
 ```
 
@@ -348,12 +377,12 @@ POST /recipes/id/tests/
 
 ```
 
-## List of tests for a recipe
+## List of notes for a recipe
 
 ### Request
 
 ```json
-GET /recipes/id/tests/
+GET /recipes/id/notes/
 ```
 
 ### Response
@@ -380,7 +409,7 @@ GET /recipes/id/tests/
 }
 ```
 
-## Update an existing test for a recipe
+## Update an existing note for a recipe
 
 Requirement: user must be logged in.
 
@@ -423,7 +452,7 @@ PUT /recipes/id/tests/id
 }
 ```
 
-## Update part of a specific test
+## Update part of a specific note
 
 Requirement: user must be logged in.
 
@@ -432,7 +461,7 @@ Requirement: user must be logged in.
 Required fields: title and/or version_number and/or ingredients and/or recipe and/or feedback_link
 
 ```json
-PATCH /recipes/id/tests/id
+PATCH /recipes/id/notes/id
 
 {
 	"recipe": "Fry up the meat n pop it in the bread.. YUM! Put 4 cold cheese slices on top of bread BING BONG",
@@ -462,14 +491,14 @@ PATCH /recipes/id/tests/id
 }
 ```
 
-## Delete a specific test of a recipe
+## Delete a specific note of a recipe
 
 Requirement: user must be logged in.
 
 ### Request
 
 ```json
-DELETE /recipes/id/tests/id
+DELETE /recipes/id/notes/id
 
 {
 

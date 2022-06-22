@@ -77,6 +77,13 @@ class TasterFeedbackView(ModelViewSet):
     serializer_class = TasterFeedbackSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            serializer_class = TasterFeedbackSerializer
+        else:
+            serializer_class = TasterFeedbackDetailSerializer
+        return serializer_class
+
     def perform_create(self, serializer):
         test_version_number = get_object_or_404(RecipeVersion, pk=self.kwargs["recipe_pk"])
         test_recipe = get_object_or_404(RecipeVersion, pk=self.kwargs["recipe_pk"])
