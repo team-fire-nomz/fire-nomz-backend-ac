@@ -266,10 +266,10 @@ Required fields: title, version_number, ingredients, and recipe_steps
 PUT /recipes/id/
 
 {
-    "title": "Cheesteak!!",
+	"title": "Cheesteak!!",
 	"version_number": "2",
-    "ingredients": "1 Italian Roll, and MEAT nomz!!",
-    "recipe": "Fry up the meat n pop it in the roll."
+	"ingredients": "1 Italian Roll, and MEAT nomz!!",
+	"recipe_steps": "Fry up the meat n pop it in the roll."
 }
 ```
 

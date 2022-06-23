@@ -105,7 +105,7 @@ class TasterFeedbackSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'created_at',
-            'test_version_number',
+            # 'test_version_number',
             'tester',
             'rating',
             'saltiness',
@@ -131,7 +131,7 @@ class TasterFeedbackDetailSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'test_recipe',
-            'test_version_number',
+            # 'test_version_number',
             'rating',
             'saltiness',
             'sweetness',
