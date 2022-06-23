@@ -5,8 +5,6 @@ class User(AbstractUser):
     location = models.CharField(max_length=100, blank=True, null=True)
     business_name = models.CharField(max_length=200, blank=True, null=True)
     
-
-
     def __repr__(self):
         return f"<User username={self.username} pk={self.pk}>"
 
@@ -42,8 +40,11 @@ class Note(models.Model):
 
 class Tag(models.Model):
     tag = models.CharField(max_length=255, blank=True, null=True)
-    recipe_version_tag = models.ForeignKey('RecipeVersion', on_delete=models.CASCADE, related_name='tags', max_length=255, blank=True, null=True)
-    note_tag = models.ForeignKey('Note', on_delete=models.CASCADE, related_name='tags', max_length=255, blank=True, null=True)
+    recipe_version_tag = models.ManyToManyField('RecipeVersion', related_name='tags')
+    note_tag = models.ManyToManyField('Note', related_name='tags')
+
+    def __str__(self):
+        return f"Tag: {self.tag}"
 
 
 class TasterFeedback(models.Model):
@@ -88,8 +89,6 @@ class TasterFeedback(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     test_recipe = models.ForeignKey('RecipeVersion', on_delete=models.CASCADE, related_name='taster_feedbacks', max_length = 255)
     tester = models.ForeignKey('User', on_delete=models.CASCADE, related_name='taster_feedbacks', max_length=50)
-    #feedback_link = models.CharField(max_length=255, blank=True, null=True)
-    # 2.0 - FK to TasterFeedback
 
     def __str__(self):
         return f"Feedback for {self.test_recipe}"
