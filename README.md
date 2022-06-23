@@ -18,10 +18,10 @@ NOTE: API Root is /api/
 | PUT    | [/recipes/{id}/](#update-an-existing-recipe)                       | Update an existing recipe            |
 | PATCH  | [/recipes/{id}/](#update-part-of-an-existing-recipe)               | Update part of an existing recipe    |
 | POST   | [/recipes/{id}/tests/](#create-a-new-note-for-a-recipe)            | Create a note for a recipe           |
-| GET    | [/recipes/{id}/tests/](#list-of-tests-for-a-recipe)                | List of notes for a recipe           |
-| PUT    | [/recipes/{id}/tests/{id}/](#update-an-existing-test-for-a-recipe) | Update a specific note for a recipe  |
-| PATCH  | [/recipes/{id}/tests/{id}/](#update-part-of-a-specific-test)       | Update an existing note              |
-| DELETE | [/recipes/{id}/tests/{id}/](#delete-a-specific-test-of-a-recipe)   | Delete part of an existing note      |
+| GET    | [/recipes/{id}/tests/](#list-of-notes-for-a-recipe)                | List of notes for a recipe           |
+| PUT    | [/recipes/{id}/tests/{id}/](#update-an-existing-note-for-a-recipe) | Update a specific note for a recipe  |
+| PATCH  | [/recipes/{id}/tests/{id}/](#update-part-of-a-specific-note)       | Update an existing note              |
+| DELETE | [/recipes/{id}/tests/{id}/](#delete-a-specific-note-of-a-recipe)   | Delete part of an existing note      |
 
 
 ## Create a new user
