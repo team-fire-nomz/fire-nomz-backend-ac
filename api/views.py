@@ -7,7 +7,8 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import UpdateAPIView, RetrieveUpdateDestroyAPIView
 from api.serializers import NoteSerializer, RecipeVersionSerializer, UserCreateSerializer, UserSerializer, TasterFeedbackSerializer, TasterFeedbackDetailSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from .permissions import IsChefOrReadOnly
+from .permissions import IsChefOrReadOnly, RecipeIsChefOrReadOnly
+from django.db.models import Q
 
 
 class UserViewSet(DjoserUserViewSet):
@@ -26,12 +27,17 @@ class UserViewSet(DjoserUserViewSet):
 class RecipeVersionViewSet(ModelViewSet):
     queryset          = RecipeVersion.objects.all()
     serializer_class  = RecipeVersionSerializer
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+    permission_classes = (RecipeIsChefOrReadOnly,)
 
     def get_queryset(self):
         search_term = self.request.query_params.get("search")
         if search_term is not None:
-            results = RecipeVersion.objects.filter(title__icontains=self.request.query_params.get("search"))
+            results = RecipeVersion.objects.filter(
+                Q(title__icontains=search_term) |
+                Q(ingredients__icontains=search_term)
+            )
+            results.order_by('-id')
+
         else:
             results = RecipeVersion.objects.annotate(
                 total_recipes=Count('recipe_steps')
@@ -62,6 +68,13 @@ class NoteViewSet(ModelViewSet):
     permission_classes = [IsChefOrReadOnly]
 
     def get_queryset(self):
+        search_term = self.request.query_params.get("search")
+        if search_term is not None:
+            results = NoteViewSet.objects.filter(title__icontains=self.request.query_params.get("search"))
+        else:
+            results = NoteViewSet.objects.annotate(
+                total_recipes=Count('note')
+            )
         return Note.objects.filter(recipe_version_id=self.kwargs["recipe_pk"])
 
     def perform_create(self, serializer):

@@ -6,22 +6,23 @@ All endpoints begin with `https://bake-it-till-you-make-it.herokuapp.com/api/`
 
 NOTE: API Root is /api/
 
-| Method | Endpoint                                                           | Description                          |
-| ------ | ------------------------------------------------------------------ | ------------------------------------ |
-| POST   | [/users/](#create-a-new-user)                                      | Create a new user                    |
-| POST   | [/auth/token/login/](#login-user)                                  | Login user\*\* remove /api from url  |
-| GET    | [/users/me/](#users-info)                                          | User's info                          |
-| POST   | [/auth/token/logout/](#logout-user)                                | Logout user\*\* remove /api from url |
-| GET    | [/recipes/](#list-of-recipes)                                      | List all created recipes             |
-| POST   | [/recipes/](#create-a-new-recipe-for-user)                         | Create a new recipe                  |
-| GET    | [/recipes/{id}/](#details-for-a-specific-recipe)                   | Details for a specific recipe        |
-| PUT    | [/recipes/{id}/](#update-an-existing-recipe)                       | Update an existing recipe            |
-| PATCH  | [/recipes/{id}/](#update-part-of-an-existing-recipe)               | Update part of an existing recipe    |
-| POST   | [/recipes/{id}/notes/](#create-a-new-note-for-a-recipe)            | Create a note for a recipe           |
-| GET    | [/recipes/{id}/notes/](#list-of-notes-for-a-recipe)                | List of notes for a recipe           |
-| PUT    | [/recipes/{id}/notes/{id}/](#update-an-existing-note-for-a-recipe) | Update a specific note for a recipe  |
-| PATCH  | [/recipes/{id}/notes/{id}/](#update-part-of-a-specific-note)       | Update an existing note              |
-| DELETE | [/recipes/{id}/notes/{id}/](#delete-a-specific-note-of-a-recipe)   | Delete part of an existing note      |
+| Method | Endpoint                                                           | Description                                 |
+| ------ | ------------------------------------------------------------------ | ------------------------------------------- |
+| POST   | [/users/](#create-a-new-user)                                      | Create a new user                           |
+| POST   | [/auth/token/login/](#login-user)                                  | Login user\*\* remove /api from url         |
+| GET    | [/users/me/](#users-info)                                          | User's info                                 |
+| POST   | [/auth/token/logout/](#logout-user)                                | Logout user\*\* remove /api from url        |
+| GET    | [/recipes/](#list-of-recipes)                                      | List all created recipes                    |
+| GET    | [/recipes?search=<search_term>/](#search-recipes)                  | Search recipes (limited to one search term) |
+| POST   | [/recipes/](#create-a-new-recipe-for-user)                         | Create a new recipe                         |
+| GET    | [/recipes/{id}/](#details-for-a-specific-recipe)                   | Details for a specific recipe               |
+| PUT    | [/recipes/{id}/](#update-an-existing-recipe)                       | Update an existing recipe                   |
+| PATCH  | [/recipes/{id}/](#update-part-of-an-existing-recipe)               | Update part of an existing recipe           |
+| POST   | [/recipes/{id}/notes/](#create-a-new-note-for-a-recipe)            | Create a note for a recipe                  |
+| GET    | [/recipes/{id}/notes/](#list-of-notes-for-a-recipe)                | List of notes for a recipe                  |
+| PUT    | [/recipes/{id}/notes/{id}/](#update-an-existing-note-for-a-recipe) | Update a specific note for a recipe         |
+| PATCH  | [/recipes/{id}/notes/{id}/](#update-part-of-a-specific-note)       | Update an existing note                     |
+| DELETE | [/recipes/{id}/notes/{id}/](#delete-a-specific-note-of-a-recipe)   | Delete part of an existing note             |
 
 
 ## Create a new user
@@ -94,6 +95,8 @@ NOTE: auth_token must be passed for all requests with the logged in user. It rem
 
 Requirement: user must be logged in.
 
+### Request
+
 ```json
 GET /users/me/
 ```
@@ -137,7 +140,7 @@ POST /auth/token/logout/
 
 Returns list of all recipes.
 
-User can be anonymous / guest or logged in.
+Requirement: user must be logged in.
 
 ### Request
 
@@ -160,6 +163,41 @@ GET /recipes/
 }
 ```
 
+
+## Search recipes
+
+Search through recipes.
+
+### Request
+
+Note: can only use 1 search parameter. It queries the title and ingredients fields.
+
+```json
+GET /all_recipes?search=cheesesteak
+```
+
+### Response
+
+```json
+200 OK
+
+[
+	{
+		"id": 2,
+		"title": "cheesesteak",
+		"version_number": "1",
+		"ingredients": "1 Italian Roll, your choice of meat (as much as you want)",
+		"recipe_steps": "Fry up the meat n pop it in the bread.. YUM!",
+		"image": null,
+		"ready_for_feedback": false,
+		"successful_variation": false,
+		"chef": "Eric",
+		"created_at": "06/22/2022 15:45"
+	}
+]
+```
+
+
 ## Create a new recipe for user
 
 Requirement: user must be logged in.
@@ -172,7 +210,7 @@ Required fields: title, version_number, ingredients and recipe_steps
 POST /recipes/
 
 {
-	"title": "Cheesteak",
+	"title": "cheesesteak",
 	"version_number": "1",
 	"ingredients": "1 Italian Roll, your choice of meat (as much as you want)",
 	"recipe_steps": "Fry up the meat n pop it in the bread.. YUM!"
@@ -186,7 +224,7 @@ POST /recipes/
 
 {
 	"id": 2,
-	"title": "Cheesteak",
+	"title": "cheesesteak",
 	"version_number": "1",
 	"ingredients": "1 Italian Roll, your choice of meat (as much as you want)",
 	"recipe_steps": "Fry up the meat n pop it in the bread.. YUM!",
@@ -223,7 +261,7 @@ If anonymous / guest user attempts to POST:
 
 ## Details for a specific recipe
 
-User can be anonymous / guest or logged in.
+Requirement: user must be logged in.
 
 ### Request
 
@@ -241,7 +279,7 @@ answers (if any). In the below example, there are no tests for this recipe. (to 
 
 {
 	"id": 2,
-	"title": "Cheesteak!",
+	"title": "cheesesteak!",
 	"version_number": "1",
 	"ingredients": "1 Italian Roll, your choice of meat (as much as you want)",
 	"recipe_steps": "Fry up the meat n pop it in the bread.. YUM!",
@@ -266,7 +304,7 @@ Required fields: title, version_number, ingredients, and recipe_steps
 PUT /recipes/id/
 
 {
-	"title": "Cheesteak!!",
+	"title": "cheesesteak!!",
 	"version_number": "2",
 	"ingredients": "1 Italian Roll, and MEAT nomz!!",
 	"recipe_steps": "Fry up the meat n pop it in the roll."
@@ -280,7 +318,7 @@ PUT /recipes/id/
 
 {
 	"id": 2,
-	"title": "Cheesteak!!",
+	"title": "cheesesteak!!",
 	"version_number": "2",
     "ingredients": "1 Italian Roll, and MEAT nomz!!",
     "recipe": "Fry up the meat n pop it in the roll.",
@@ -298,6 +336,16 @@ If missing a required field, ex. ingredients:
 	"ingredients": [
 		"This field is required."
 	]
+}
+```
+
+If a chef tries to edit anoter chef's recipe:
+
+```json
+403 Forbidden
+
+{
+	"detail": "Editing posts is restricted to the author only."
 }
 ```
 
@@ -325,7 +373,7 @@ PATCH /recipes/id/
 
 {
 	"id": 2,
-	"title": "Cheesteak",
+	"title": "cheesesteak",
 	"version_number": "2",
 	"ingredients": "1 Italian Roll, and any meat (or tofu if you want)!?!?",
 	"recipe": "Fry up the meat n pop it in the bread.. YUM!",
@@ -334,11 +382,22 @@ PATCH /recipes/id/
 }
 ```
 
+If a chef tries to edit anoter chef's recipe:
+
+```json
+403 Forbidden
+
+{
+	"detail": "Editing posts is restricted to the author only."
+}
+```
+
+
 ## Create a new note for a recipe
 
-### Request
-
 Requirement: user must be logged in.
+
+### Request
 
 Required fields: recipe_version
 Optional fields: note 
@@ -359,7 +418,7 @@ POST /recipes/id/notes/
 
 {
 	"id": 3,
-	"title": "Cheesteak",
+	"title": "cheesesteak",
 	"version_number": "1",
 	"ingredients": "1 Italian Roll, MEEEAT AND cheez nomz!!",
 	"recipe": "Fry up the meat n pop it in the bread.. YUM! Put cold cheese slice on top of bread BING BONG",
@@ -392,7 +451,7 @@ GET /recipes/id/notes/
 
 {
 	"id": 3,
-	"title": "Cheesteak",
+	"title": "cheesesteak",
 	"version_number": "1",
 	"ingredients": "1 Italian Roll, MEEEAT AND cheez nomz!!",
 	"recipe": "Fry up the meat n pop it in the bread.. YUM! Put cold cheese slice on top of bread BING BONG",
@@ -421,7 +480,7 @@ Required fields: title, version_number, ingredients, recipe, feedback_link
 PUT /recipes/id/notes/id
 
 {
-	"title": "Cheesteak"
+	"title": "cheesesteak"
 	"version_number": "1",
 	"ingredients": "1 Italian Roll, MEEEAT AND more cheez nomz!!",
 	"recipe": "Fry up the meat n pop it in the bread.. YUM! Put 2 cold cheese slices on top of bread BING BONG",
@@ -435,7 +494,7 @@ PUT /recipes/id/notes/id
 200 OK
 {
 	"id": 3,
-	"title": "Cheesteak",
+	"title": "cheesesteak",
 	"version_number": "1",
 	"ingredients": "1 Italian Roll, MEEEAT AND cheez nomz!!",
 	"recipe": "Fry up the meat n pop it in the bread.. YUM! Put 2 cold cheese slices on top of bread BING BONG",
@@ -474,7 +533,7 @@ PATCH /recipes/id/notes/id
 200 OK
 {
 	"id": 3,
-	"title": "Cheesteak",
+	"title": "cheesesteak",
 	"version_number": "1",
 	"ingredients": "1 Italian Roll, MEEEAT AND more cheez nomz!!",
 	"recipe": "Fry up the meat n pop it in the bread.. YUM! Put 4 cold cheese slices on top of bread BING BONG",
