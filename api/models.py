@@ -24,7 +24,7 @@ class RecipeVersion(models.Model):
     successful_variation = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     chef = models.ForeignKey('User', on_delete=models.CASCADE, related_name='recipe_versions', max_length=255) 
-    base_recipe = models.ForeignKey('self', on_delete=models.CASCADE),
+    base_recipe = models.ForeignKey('self', on_delete=models.CASCADE)
     
     def __str__(self):
         return f"{self.title} by {self.chef}"
@@ -37,14 +37,16 @@ class Note(models.Model):
     note_by = models.ForeignKey('User', on_delete=models.CASCADE, related_name='notes')
 
     def __str__(self):
-        return f"{self.recipe_version} by {self.note_by}"
+        return f"Recipe: {self.recipe_version} - Note by {self.note_by}"
 
 
 class Tag(models.Model):
     tag = models.CharField(max_length=255, blank=True, null=True)
-    recipe_version_tag = models.ForeignKey('RecipeVersion', on_delete=models.CASCADE, related_name='tags', max_length=255, blank=True, null=True)
-    note_tag = models.ForeignKey('Note', on_delete=models.CASCADE, related_name='tags', max_length=255, blank=True, null=True)
+    recipe_version_tag = models.ManyToManyField('RecipeVersion', related_name='tags')
+    note_tag = models.ManyToManyField('Note', related_name='tags')
 
+    def __str__(self):
+        return f"Tag: {self.tag}"
 
 class TasterFeedback(models.Model):
     ONE = '1' 

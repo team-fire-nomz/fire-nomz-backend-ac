@@ -7,6 +7,8 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import UpdateAPIView, RetrieveUpdateDestroyAPIView
 from api.serializers import NoteSerializer, RecipeVersionSerializer, UserCreateSerializer, UserSerializer, TasterFeedbackSerializer, TasterFeedbackDetailSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from .permissions import IsChefOrReadOnly
+
 
 
 class UserViewSet(DjoserUserViewSet):
@@ -58,7 +60,7 @@ class RecipeVersionViewSet(ModelViewSet):
 class NoteViewSet(ModelViewSet):
     queryset = Note.objects.all()
     serializer_class = NoteSerializer
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+    permission_classes = [IsChefOrReadOnly]
 
     def get_queryset(self):
         return Note.objects.filter(recipe_version_id=self.kwargs["recipe_pk"])
