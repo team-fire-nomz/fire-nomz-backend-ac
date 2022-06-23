@@ -18,6 +18,7 @@ NOTE: API Root is /api/
 | GET    | [/recipes/{id}/](#details-for-a-specific-recipe)                   | Details for a specific recipe               |
 | PUT    | [/recipes/{id}/](#update-an-existing-recipe)                       | Update an existing recipe                   |
 | PATCH  | [/recipes/{id}/](#update-part-of-an-existing-recipe)               | Update part of an existing recipe           |
+| DELETE | [/recipes/{id}/](#delete-recipe)                                   | Delete an existing recipe                   |
 | POST   | [/recipes/{id}/notes/](#create-a-new-note-for-a-recipe)            | Create a note for a recipe                  |
 | GET    | [/recipes/{id}/notes/](#list-of-notes-for-a-recipe)                | List of notes for a recipe                  |
 | PUT    | [/recipes/{id}/notes/{id}/](#update-an-existing-note-for-a-recipe) | Update a specific note for a recipe         |
@@ -157,7 +158,7 @@ GET /recipes/
     "id": 1,
     "title": "Title Test",
     "ingredients": "Ingredients Test",
-    "recipe": "Recipe Test",
+    "recipe_steps": "Recipe Test",
     "chef": "Eric",
     "created_at": "2022-06-17T22:10:19.000066",
 }
@@ -320,8 +321,8 @@ PUT /recipes/id/
 	"id": 2,
 	"title": "cheesesteak!!",
 	"version_number": "2",
-    "ingredients": "1 Italian Roll, and MEAT nomz!!",
-    "recipe": "Fry up the meat n pop it in the roll.",
+	"ingredients": "1 Italian Roll, and MEAT nomz!!",
+	"recipe_steps": "Fry up the meat n pop it in the roll.",
 	"chef": "Eric",
 	"created_at": "06/22/2022 15:45"
 }
@@ -376,7 +377,7 @@ PATCH /recipes/id/
 	"title": "cheesesteak",
 	"version_number": "2",
 	"ingredients": "1 Italian Roll, and any meat (or tofu if you want)!?!?",
-	"recipe": "Fry up the meat n pop it in the bread.. YUM!",
+	"recipe_steps": "Fry up the meat n pop it in the bread.. YUM!",
 	"chef": "Eric",
 	"created_at": "6/22/2022 15:50"
 }
@@ -389,6 +390,43 @@ If a chef tries to edit anoter chef's recipe:
 
 {
 	"detail": "Editing posts is restricted to the author only."
+}
+```
+
+
+## Delete Recipe
+
+Requirement: user must be logged in. 
+
+### Request
+
+Required in URL: recipe's id.
+
+```json
+DELETE /recipe/id/
+```
+
+### Response
+
+A successful deletion returns:
+
+```json
+204 No Content
+```
+
+If another logged in user attempts to delete a recipe that is not theirs:
+```json
+404 Not Found
+{
+	"detail": "Not found."
+}
+```
+
+If anonymous / guest attempts to delete a question:
+```json
+401 Unauthorized
+{
+	"detail": "Authentication credentials were not provided."
 }
 ```
 
@@ -417,21 +455,11 @@ POST /recipes/id/notes/
 201 Created
 
 {
-	"id": 3,
-	"title": "cheesesteak",
-	"version_number": "1",
-	"ingredients": "1 Italian Roll, MEEEAT AND cheez nomz!!",
-	"recipe": "Fry up the meat n pop it in the bread.. YUM! Put cold cheese slice on top of bread BING BONG",
-	"image": null,
-	"outside_notes": null,
-	"final_notes": null,
-	"adjustments": null,
-	"feedback_link": "http://example.com",
-	"tags": null,
-	"chef": "Eric",
-	"variation_complete": false,
-	"created_at": "2022-06-18T18:00:38.408425",
-	"successful_variation": false
+	"id": "1",
+	"note": "Chezsteak so nomz!",
+	"note_by": "Eric",
+	"recipe_version": "2",
+	"created_at": "06/23/2022 17:32"
 }
 
 ```
@@ -454,7 +482,7 @@ GET /recipes/id/notes/
 	"title": "cheesesteak",
 	"version_number": "1",
 	"ingredients": "1 Italian Roll, MEEEAT AND cheez nomz!!",
-	"recipe": "Fry up the meat n pop it in the bread.. YUM! Put cold cheese slice on top of bread BING BONG",
+	"recipe_steps": "Fry up the meat n pop it in the bread.. YUM! Put cold cheese slice on top of bread BING BONG",
 	"image": null,
 	"outside_notes": null,
 	"final_notes": null,

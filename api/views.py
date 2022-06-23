@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from djoser.views import UserViewSet as DjoserUserViewSet
 from django.db.models import Count
+from requests import Response
 from rest_framework.generics import get_object_or_404
 from api.models import User, RecipeVersion, Note, TasterFeedback
 from rest_framework.viewsets import ModelViewSet
@@ -70,12 +71,12 @@ class NoteViewSet(ModelViewSet):
     def get_queryset(self):
         search_term = self.request.query_params.get("search")
         if search_term is not None:
-            results = NoteViewSet.objects.filter(title__icontains=self.request.query_params.get("search"))
+            results = Note.objects.filter(note__icontains=self.request.query_params.get("search"))
         else:
-            results = NoteViewSet.objects.annotate(
+            results = Note.objects.annotate(
                 total_recipes=Count('note')
             )
-        return Note.objects.filter(recipe_version_id=self.kwargs["recipe_pk"])
+        return Note.objects.filter(recipe_version_id=self.kwargs["recipe_pk"]).order_by('-id')
 
     def perform_create(self, serializer):
         if self.request.user.is_authenticated:

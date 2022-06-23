@@ -37,6 +37,7 @@ class UserCreateSerializer(DjoserUserCreateSerializer):
 
 class RecipeVersionSerializer(serializers.ModelSerializer):
     chef        = serializers.SlugRelatedField(read_only=True, slug_field="username")
+    notes = serializers.SlugRelatedField(many=True, read_only=True, slug_field='note')
 
     class Meta:
         model  = RecipeVersion
@@ -50,20 +51,22 @@ class RecipeVersionSerializer(serializers.ModelSerializer):
             'ready_for_feedback',
             'successful_variation',
             'chef',
-            # 'recipe_note_tag',
-            # 'recipe_note',
             'created_at',
+            'notes',
             ]
 
 
 class NoteSerializer(serializers.ModelSerializer):
+    note_by        = serializers.SlugRelatedField(read_only=True, slug_field="username")
+
     class Meta:
         model = Note
         fields = [
             'id',
             'note',
+            'note_by',
             'recipe_version',
-            # 'note_tag',
+            'created_at',
         ]
 
 class TasterFeedbackSerializer(serializers.ModelSerializer):
@@ -107,7 +110,6 @@ class TasterFeedbackDetailSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'test_recipe',
-            # 'test_version_number',
             'rating',
             'saltiness',
             'sweetness',
