@@ -71,12 +71,16 @@ class NoteViewSet(ModelViewSet):
     def get_queryset(self):
         search_term = self.request.query_params.get("search")
         if search_term is not None:
-            results = Note.objects.filter(note__icontains=self.request.query_params.get("search"))
+            results = Note.objects.filter(
+                Q(note__icontains=search_term)
+                )
+            results
+
         else:
             results = Note.objects.annotate(
                 total_recipes=Count('note')
             )
-        return Note.objects.filter(recipe_version_id=self.kwargs["recipe_pk"]).order_by('-id')
+        return results.order_by('-id')
 
     def perform_create(self, serializer):
         if self.request.user.is_authenticated:

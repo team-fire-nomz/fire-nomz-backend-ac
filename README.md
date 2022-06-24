@@ -21,6 +21,7 @@ NOTE: API Root is /api/
 | DELETE | [/recipes/{id}/](#delete-recipe)                                   | Delete an existing recipe                   |
 | POST   | [/recipes/{id}/notes/](#create-a-new-note-for-a-recipe)            | Create a note for a recipe                  |
 | GET    | [/recipes/{id}/notes/](#list-of-notes-for-a-recipe)                | List of notes for a recipe                  |
+| GET    | [/recipes/{id}/notes?search=<search_term>/](#search-notes)         | Search notes (limited to one search term)   |
 | PUT    | [/recipes/{id}/notes/{id}/](#update-an-existing-note-for-a-recipe) | Update a specific note for a recipe         |
 | PATCH  | [/recipes/{id}/notes/{id}/](#update-part-of-a-specific-note)       | Update an existing note                     |
 | DELETE | [/recipes/{id}/notes/{id}/](#delete-a-specific-note-of-a-recipe)   | Delete part of an existing note             |
@@ -51,14 +52,14 @@ Response: If you receive the same info you provided, user creation was successfu
 201 Created
 
 {
-"id": 2,
-"username": "Eric",
-"email": "",
-"first_name": "",
-"last_name": "",
-"date_joined": "06/22/2022 15:29",
-"location": null,
-"business_name": null
+	"id": 2,
+	"username": "Eric",
+	"email": "",
+	"first_name": "",
+	"last_name": "",
+	"date_joined": "06/22/2022 15:29",
+	"location": null,
+	"business_name": null
 }
 
 ```
@@ -174,7 +175,7 @@ Search through recipes.
 Note: can only use 1 search parameter. It queries the title and ingredients fields.
 
 ```json
-GET /all_recipes?search=cheesesteak
+GET /recipes?search=cheesesteak
 ```
 
 ### Response
@@ -272,8 +273,8 @@ GET /recipes/id/
 
 ### Response
 
-Response for GET: id, title, version_number, ingredients, recipe_steps, image, ready_for_feedback, successful_variation, chef, and created_at
-answers (if any). In the below example, there are no tests for this recipe. (to be added/tested later - ** UPDATE later **)
+Response for GET: id, title, version_number, ingredients, recipe_steps, image, ready_for_feedback, successful_variation, chef, created_at and
+answers (if any). In the below example, there are no answers for this recipe.
 
 ```json
 200 OK
@@ -288,7 +289,8 @@ answers (if any). In the below example, there are no tests for this recipe. (to 
 	"ready_for_feedback": false,
 	"successful_variation": false,
 	"chef": "Eric",
-	"created_at": "06/22/2022 15:43"
+	"created_at": "06/22/2022 15:43",
+	"notes": []
 }
 ```
 
@@ -437,14 +439,15 @@ Requirement: user must be logged in.
 
 ### Request
 
-Required fields: recipe_version
+Required fields: recipe_version *this MUST match the recipes/id or it will post to another recipe's id (likely bug?)*
+
 Optional fields: note 
 
 ```json
 POST /recipes/id/notes/
 
 {
-	"recipe_version": 2,
+	"recipe_version": 1,
 	"note": "Chezsteak so nomz!"
 }
 ```
@@ -458,7 +461,7 @@ POST /recipes/id/notes/
 	"id": "1",
 	"note": "Chezsteak so nomz!",
 	"note_by": "Eric",
-	"recipe_version": "2",
+	"recipe_version": "1",
 	"created_at": "06/23/2022 17:32"
 }
 
@@ -477,24 +480,53 @@ GET /recipes/id/notes/
 ```json
 200 OK
 
-{
-	"id": 3,
-	"title": "cheesesteak",
-	"version_number": "1",
-	"ingredients": "1 Italian Roll, MEEEAT AND cheez nomz!!",
-	"recipe_steps": "Fry up the meat n pop it in the bread.. YUM! Put cold cheese slice on top of bread BING BONG",
-	"image": null,
-	"outside_notes": null,
-	"final_notes": null,
-	"adjustments": null,
-	"feedback_link": "http://example.com",
-	"tags": null,
-	"chef": "Eric",
-	"variation_complete": false,
-	"created_at": "2022-06-18T18:00:38.408425",
-	"successful_variation": false
-}
+[
+	{
+		"id": 1,
+		"note": "Chezsteak so nomz!",
+		"note_by": "Eric",
+		"recipe_version": 1,
+		"created_at": "06/23/2022 23:01"
+	}
+]
 ```
+
+
+## Search notes
+
+Search through notes.
+
+### Request
+
+Note: can only use 1 search parameter. It queries the notes field.
+
+```json
+GET /recipes/id/notes?search=nom
+```
+
+### Response
+
+```json
+200 OK
+
+[
+	{
+		"id": 4,
+		"note": "Nom nomz",
+		"note_by": "Eric",
+		"recipe_version": 1,
+		"created_at": "06/23/2022 23:19"
+	},
+	{
+		"id": 1,
+		"note": "Chezsteak so nomz!!",
+		"note_by": "Eric",
+		"recipe_version": 1,
+		"created_at": "06/23/2022 23:01"
+	}
+]
+```
+
 
 ## Update an existing note for a recipe
 
@@ -502,17 +534,14 @@ Requirement: user must be logged in.
 
 ### Request
 
-Required fields: title, version_number, ingredients, recipe, feedback_link
+Required fields: recipe_version and note*
 
 ```json
 PUT /recipes/id/notes/id
 
 {
-	"title": "cheesesteak"
-	"version_number": "1",
-	"ingredients": "1 Italian Roll, MEEEAT AND more cheez nomz!!",
-	"recipe": "Fry up the meat n pop it in the bread.. YUM! Put 2 cold cheese slices on top of bread BING BONG",
-	"feedback_link": "http://example.com"
+	"recipe_version": 1,
+	"note": "Love this recipe.. DELISH!!"
 }
 ```
 
@@ -520,24 +549,24 @@ PUT /recipes/id/notes/id
 
 ```json
 200 OK
+
 {
-	"id": 3,
-	"title": "cheesesteak",
-	"version_number": "1",
-	"ingredients": "1 Italian Roll, MEEEAT AND cheez nomz!!",
-	"recipe": "Fry up the meat n pop it in the bread.. YUM! Put 2 cold cheese slices on top of bread BING BONG",
-	"image": null,
-	"outside_notes": null,
-	"final_notes": null,
-	"adjustments": null,
-	"feedback_link": "http://example.com",
-	"tags": null,
-	"chef": "Eric",
-	"variation_complete": false,
-	"created_at": "2022-06-18T18:00:38.408425",
-	"successful_variation": false
+	"id": 1,
+	"note": "Chezsteak so nomz!!",
+	"note_by": "Eric",
+	"recipe_version": 1,
+	"created_at": "06/23/2022 23:01"
 }
 ```
+
+If another user attempts to edit the original user's note:
+```json
+403 Forbidden
+{
+	"detail": "Editing posts is restricted to the author only."
+}
+```
+
 
 ## Update part of a specific note
 
@@ -545,13 +574,14 @@ Requirement: user must be logged in.
 
 ### Request
 
-Required fields: title and/or version_number and/or ingredients and/or recipe and/or feedback_link
+Required fields: recipe_version and/or note*
 
 ```json
 PATCH /recipes/id/notes/id
 
 {
-	"recipe": "Fry up the meat n pop it in the bread.. YUM! Put 4 cold cheese slices on top of bread BING BONG",
+	"recipe_version": 1,
+	"note": "SOO GOOD!!"
 }
 ```
 
@@ -560,21 +590,11 @@ PATCH /recipes/id/notes/id
 ```json
 200 OK
 {
-	"id": 3,
-	"title": "cheesesteak",
-	"version_number": "1",
-	"ingredients": "1 Italian Roll, MEEEAT AND more cheez nomz!!",
-	"recipe": "Fry up the meat n pop it in the bread.. YUM! Put 4 cold cheese slices on top of bread BING BONG",
-	"image": null,
-	"outside_notes": null,
-	"final_notes": null,
-	"adjustments": null,
-	"feedback_link": "http://example.com",
-	"tags": null,
-	"chef": "Eric",
-	"variation_complete": false,
-	"created_at": "2022-06-18T18:00:38.408425",
-	"successful_variation": false
+	"id": 1,
+	"note": "SOO GOOD!!",
+	"note_by": "Eric",
+	"recipe_version": 1,
+	"created_at": "06/23/2022 23:06"
 }
 ```
 
@@ -599,5 +619,13 @@ DELETE /recipes/id/notes/id
 
 {
 
+}
+```
+
+If another user attempts to delete the original user's note:
+```json
+403 Forbidden
+{
+	"detail": "Editing posts is restricted to the author only."
 }
 ```

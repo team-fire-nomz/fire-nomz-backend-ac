@@ -21,8 +21,7 @@ class RecipeVersion(models.Model):
     ready_for_feedback = models.BooleanField(default=False)
     successful_variation = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    chef = models.ForeignKey('User', on_delete=models.CASCADE, related_name='recipe_versions', max_length=255) 
-    base_recipe = models.ForeignKey('self', on_delete=models.CASCADE),
+    chef = models.ForeignKey('User', on_delete=models.CASCADE, related_name='recipe_versions', max_length=255)
     
     def __str__(self):
         return f"{self.title} by {self.chef}"
