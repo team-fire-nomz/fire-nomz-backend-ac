@@ -2,7 +2,7 @@ from dataclasses import fields
 from rest_framework import serializers
 from djoser.serializers import UserSerializer as DjoserUserSerializer
 from djoser.serializers import UserCreateSerializer as DjoserUserCreateSerializer
-from .models import RecipeVersion, Note, User, TasterFeedback
+from .models import RecipeVersion, Note, Tag, User, TasterFeedback
 
 
 class UserSerializer(DjoserUserSerializer):
@@ -81,14 +81,28 @@ class RecipeVersionSerializer(serializers.ModelSerializer):
 #         ]
 
 class NoteSerializer(serializers.ModelSerializer):
+    note_by = serializers.SlugRelatedField(read_only=True, slug_field="username")
     class Meta:
         model = Note
         fields = [
             'id',
             'note',
             'recipe_version',
-            # 'note_tag',
+            'note_by'
         ]
+
+
+class TagSerializer(serializers.ModelSerializer):
+    # tag = serializers.SlugRelatedField(slug_field='tag', read_only=True)
+    class Meta:
+        model = Tag
+        fields = [
+            'id',
+            'tag',
+            'recipe_version_tag',
+            'note_tag'
+        ]
+
 
 class TasterFeedbackSerializer(serializers.ModelSerializer):
     tester = serializers.SlugRelatedField(read_only=True, slug_field="username")
