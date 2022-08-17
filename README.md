@@ -2,7 +2,7 @@
 
 ## Base URL:
 
-All endpoints begin with `https://bake-it-till-you-make-it.herokuapp.com/api/`
+All endpoints begin with `https://baking-notebook.herokuapp.com/api/`
 
 NOTE: API Root is /api/
 
@@ -22,7 +22,6 @@ NOTE: API Root is /api/
 | PUT    | [/recipes/{id}/tests/{id}/](#update-an-existing-test-for-a-recipe) | Update a specific note for a recipe  |
 | PATCH  | [/recipes/{id}/tests/{id}/](#update-part-of-a-specific-test)       | Update an existing note              |
 | DELETE | [/recipes/{id}/tests/{id}/](#delete-a-specific-test-of-a-recipe)   | Delete part of an existing note      |
-
 
 ## Create a new user
 
@@ -61,7 +60,6 @@ Response: If you receive the same info you provided, user creation was successfu
 
 ```
 
-
 ## Login user
 
 ### Request
@@ -89,7 +87,6 @@ POST auth/token/login/
 
 NOTE: auth_token must be passed for all requests with the logged in user. It remains active till user is [logged out](#logout-user).
 
-
 ## User's info
 
 Requirement: user must be logged in.
@@ -115,7 +112,6 @@ GET /users/me/
 }
 ```
 
-
 ## Logout user
 
 ### Request
@@ -131,7 +127,6 @@ POST /auth/token/logout/
 ```json
 204 No Content
 ```
-
 
 ## List of recipes
 
@@ -220,7 +215,6 @@ If anonymous / guest user attempts to POST:
 }
 ```
 
-
 ## Details for a specific recipe
 
 User can be anonymous / guest or logged in.
@@ -253,14 +247,13 @@ answers (if any). In the below example, there are no tests for this recipe. (to 
 }
 ```
 
-
 ## Update an existing recipe
 
 Requirement: user must be logged in.
 
 ### Request
 
-Required fields: title, version_number, ingredients, and recipe_steps 
+Required fields: title, version_number, ingredients, and recipe_steps
 
 ```json
 PUT /recipes/id/
@@ -301,7 +294,6 @@ If missing a required field, ex. ingredients:
 }
 ```
 
-
 ## Update part of an existing recipe
 
 Requirement: user must be logged in.
@@ -341,7 +333,7 @@ PATCH /recipes/id/
 Requirement: user must be logged in.
 
 Required fields: recipe_version
-Optional fields: note 
+Optional fields: note
 
 ```json
 POST /recipes/id/notes/
