@@ -24,7 +24,7 @@ router = DefaultRouter()
 router.register('recipes',api_views.RecipeVersionViewSet)
 router.register('users',api_views.UserViewSet, 'users')
 router.register('recipes/(?P<recipe_pk>[^/.]+)/notes', api_views.NoteViewSet)
-router.register('recipes/(?P<recipe_pk>[^/.]+)/feedback', api_views.TasterFeedbackView)
+# router.register('recipes/(?P<recipe_pk>[^/.]+)/feedback', api_views.TasterFeedbackView)
 
 #router.register('recipes/(?P<recipe_pk>[^/.]+)/notes/(?P<note_pk>[^/.]+)/feedback/(?P<feedback_pk>[^/.]+)', api_views.TasterFeedbackDetailView)
 

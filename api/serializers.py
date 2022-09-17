@@ -2,7 +2,7 @@ from dataclasses import fields
 from rest_framework import serializers
 from djoser.serializers import UserSerializer as DjoserUserSerializer
 from djoser.serializers import UserCreateSerializer as DjoserUserCreateSerializer
-from .models import RecipeVersion, Note, User, TasterFeedback
+from .models import RecipeVersion, Note, User
 
 
 class UserSerializer(DjoserUserSerializer):
@@ -69,9 +69,35 @@ class NoteSerializer(serializers.ModelSerializer):
             'created_at',
         ]
 
-class TasterFeedbackSerializer(serializers.ModelSerializer):
-    tester = serializers.SlugRelatedField(read_only=True, slug_field="username")
-    # test_version_number = serializers.SlugRelatedField(read_only=True, slug_field="test_version_number")
+# class TasterFeedbackSerializer(serializers.ModelSerializer):
+#     tester = serializers.SlugRelatedField(read_only=True, slug_field="username")
+#     # test_version_number = serializers.SlugRelatedField(read_only=True, slug_field="test_version_number")
+#     # rating = serializers.MultipleChoiceField(choices = TasterFeedback.RADIO)
+#     # saltiness = serializers.MultipleChoiceField(choices = TasterFeedback.SCALE)
+#     # sweetness = serializers.MultipleChoiceField(choices = TasterFeedback.SCALE)
+#     # portion = serializers.MultipleChoiceField(choices = TasterFeedback.SCALE)
+#     # texture = serializers.MultipleChoiceField(choices = TasterFeedback.CHOICE)
+
+
+#     class Meta:
+#         model = TasterFeedback
+#         fields = [
+#             'id',
+#             'created_at',
+#             # 'test_version_number',
+#             'tester',
+#             'rating',
+#             'saltiness',
+#             'sweetness',
+#             'portion',
+#             'texture',
+#             'additional_comment',
+#         ]
+
+
+# class TasterFeedbackDetailSerializer(serializers.ModelSerializer):
+#     tester = serializers.SlugRelatedField(read_only=True, slug_field="username")
+
     # rating = serializers.MultipleChoiceField(choices = TasterFeedback.RADIO)
     # saltiness = serializers.MultipleChoiceField(choices = TasterFeedback.SCALE)
     # sweetness = serializers.MultipleChoiceField(choices = TasterFeedback.SCALE)
@@ -79,43 +105,17 @@ class TasterFeedbackSerializer(serializers.ModelSerializer):
     # texture = serializers.MultipleChoiceField(choices = TasterFeedback.CHOICE)
 
 
-    class Meta:
-        model = TasterFeedback
-        fields = [
-            'id',
-            'created_at',
-            # 'test_version_number',
-            'tester',
-            'rating',
-            'saltiness',
-            'sweetness',
-            'portion',
-            'texture',
-            'additional_comment',
-        ]
-
-
-class TasterFeedbackDetailSerializer(serializers.ModelSerializer):
-    tester = serializers.SlugRelatedField(read_only=True, slug_field="username")
-
-    # rating = serializers.MultipleChoiceField(choices = TasterFeedback.RADIO)
-    # saltiness = serializers.MultipleChoiceField(choices = TasterFeedback.SCALE)
-    # sweetness = serializers.MultipleChoiceField(choices = TasterFeedback.SCALE)
-    # portion = serializers.MultipleChoiceField(choices = TasterFeedback.SCALE)
-    # texture = serializers.MultipleChoiceField(choices = TasterFeedback.CHOICE)
-
-
-    class Meta:
-        model = TasterFeedback
-        fields = [
-            'id',
-            'test_recipe',
-            'rating',
-            'saltiness',
-            'sweetness',
-            'portion',
-            'texture',
-            'additional_comment',
-            'tester',
-            'created_at',
-        ]
+    # class Meta:
+    #     model = TasterFeedback
+    #     fields = [
+    #         'id',
+    #         'test_recipe',
+    #         'rating',
+    #         'saltiness',
+    #         'sweetness',
+    #         'portion',
+    #         'texture',
+    #         'additional_comment',
+    #         'tester',
+    #         'created_at',
+    #     ]
