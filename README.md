@@ -1,8 +1,10 @@
 # Recipe Testing App
 
+Baking Notebook is an app where you can create and store recipes.
+
 ## Base URL:
 
-All endpoints begin with `https://bake-it-till-you-make-it.herokuapp.com/api/`
+All endpoints begin with `https://baking-notebook-ac.herokuapp.com/api/`
 
 NOTE: API Root is /api/
 
@@ -25,7 +27,6 @@ NOTE: API Root is /api/
 | PUT    | [/recipes/{id}/notes/{id}/](#update-an-existing-note-for-a-recipe) | Update a specific note for a recipe         |
 | PATCH  | [/recipes/{id}/notes/{id}/](#update-part-of-a-specific-note)       | Update an existing note                     |
 | DELETE | [/recipes/{id}/notes/{id}/](#delete-a-specific-note-of-a-recipe)   | Delete part of an existing note             |
-
 
 ## Create a new user
 
@@ -64,7 +65,6 @@ Response: If you receive the same info you provided, user creation was successfu
 
 ```
 
-
 ## Login user
 
 ### Request
@@ -91,7 +91,6 @@ POST auth/token/login/
 ```
 
 NOTE: auth_token must be passed for all requests with the logged in user. It remains active till user is [logged out](#logout-user).
-
 
 ## User's info
 
@@ -120,7 +119,6 @@ GET /users/me/
 }
 ```
 
-
 ## Logout user
 
 ### Request
@@ -136,7 +134,6 @@ POST /auth/token/logout/
 ```json
 204 No Content
 ```
-
 
 ## List of recipes
 
@@ -164,7 +161,6 @@ GET /recipes/
     "created_at": "2022-06-17T22:10:19.000066",
 }
 ```
-
 
 ## Search recipes
 
@@ -198,7 +194,6 @@ GET /recipes?search=cheesesteak
 	}
 ]
 ```
-
 
 ## Create a new recipe for user
 
@@ -260,7 +255,6 @@ If anonymous / guest user attempts to POST:
 }
 ```
 
-
 ## Details for a specific recipe
 
 Requirement: user must be logged in.
@@ -294,14 +288,13 @@ answers (if any). In the below example, there are no answers for this recipe.
 }
 ```
 
-
 ## Update an existing recipe
 
 Requirement: user must be logged in.
 
 ### Request
 
-Required fields: title, version_number, ingredients, and recipe_steps 
+Required fields: title, version_number, ingredients, and recipe_steps
 
 ```json
 PUT /recipes/id/
@@ -342,7 +335,7 @@ If missing a required field, ex. ingredients:
 }
 ```
 
-If a chef tries to edit anoter chef's recipe:
+If a chef tries to edit another chef's recipe:
 
 ```json
 403 Forbidden
@@ -351,7 +344,6 @@ If a chef tries to edit anoter chef's recipe:
 	"detail": "Editing posts is restricted to the author only."
 }
 ```
-
 
 ## Update part of an existing recipe
 
@@ -385,7 +377,7 @@ PATCH /recipes/id/
 }
 ```
 
-If a chef tries to edit anoter chef's recipe:
+If a chef tries to edit another chef's recipe:
 
 ```json
 403 Forbidden
@@ -395,10 +387,9 @@ If a chef tries to edit anoter chef's recipe:
 }
 ```
 
-
 ## Delete Recipe
 
-Requirement: user must be logged in. 
+Requirement: user must be logged in.
 
 ### Request
 
@@ -417,6 +408,7 @@ A successful deletion returns:
 ```
 
 If another logged in user attempts to delete a recipe that is not theirs:
+
 ```json
 404 Not Found
 {
@@ -425,6 +417,7 @@ If another logged in user attempts to delete a recipe that is not theirs:
 ```
 
 If anonymous / guest attempts to delete a question:
+
 ```json
 401 Unauthorized
 {
@@ -432,16 +425,15 @@ If anonymous / guest attempts to delete a question:
 }
 ```
 
-
 ## Create a new note for a recipe
 
 Requirement: user must be logged in.
 
 ### Request
 
-Required fields: recipe_version *this MUST match the recipes/id or it will post to another recipe's id (likely bug?)*
+Required fields: recipe\*version \_this MUST match the recipes/id or it will post to another recipe's id
 
-Optional fields: note 
+Optional fields: note
 
 ```json
 POST /recipes/id/notes/
@@ -491,7 +483,6 @@ GET /recipes/id/notes/
 ]
 ```
 
-
 ## Search notes
 
 Search through notes.
@@ -527,14 +518,13 @@ GET /recipes/id/notes?search=nom
 ]
 ```
 
-
 ## Update an existing note for a recipe
 
 Requirement: user must be logged in.
 
 ### Request
 
-Required fields: recipe_version and note*
+Required fields: recipe_version and note\*
 
 ```json
 PUT /recipes/id/notes/id
@@ -560,6 +550,7 @@ PUT /recipes/id/notes/id
 ```
 
 If another user attempts to edit the original user's note:
+
 ```json
 403 Forbidden
 {
@@ -567,14 +558,13 @@ If another user attempts to edit the original user's note:
 }
 ```
 
-
 ## Update part of a specific note
 
 Requirement: user must be logged in.
 
 ### Request
 
-Required fields: recipe_version and/or note*
+Required fields: recipe_version and/or note\*
 
 ```json
 PATCH /recipes/id/notes/id
@@ -623,6 +613,7 @@ DELETE /recipes/id/notes/id
 ```
 
 If another user attempts to delete the original user's note:
+
 ```json
 403 Forbidden
 {

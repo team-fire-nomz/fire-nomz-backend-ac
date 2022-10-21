@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 import environ, os
 from pathlib import Path
 import django_on_heroku
+from corsheaders.defaults import default_headers
 
 env = environ.Env(
     # set casting, default value
@@ -153,12 +154,16 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+        'rest_framework.permissions.AllowAny',
     ],
     'DATETIME_FORMAT': '%m/%d/%Y %H:%M',
 }
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    "content-disposition",
+]
 
 # Test for time modification - have to test lines 164-170
 
